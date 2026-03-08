@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import StatCards from "@/component/dashboard/StatsCards";
 import ActivityGrid from "@/component/dashboard/ActivityGrid";
 import RecentHistory from "@/component/dashboard/RecentHistory";
@@ -6,6 +7,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import dbConnect from "@/lib/dbConnect";
 import Activity from "@/models/Activity";
 import User from "@/models/User";
+
 export default async function DashboardPage() {
 const session = await getServerSession(authOptions);
 

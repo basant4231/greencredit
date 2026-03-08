@@ -1,6 +1,3 @@
-import React from 'react';
-import { Cloud, Coins, Zap, Trophy } from "lucide-react";
-
 
 
 export default function StatCards({ credits, co2, energy }: any) {

@@ -1,10 +1,11 @@
 "use client";
+export const dynamic = 'force-dynamic';
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'; 
 import { useSession, signOut } from "next-auth/react"; // Added signOut for the profile menu
 import { Menu, X, LeafyGreen, User as UserIcon, LogOut } from 'lucide-react';
-
+import Image from 'next/image'; // 1. Add this import at the top of Navbar.tsx
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false); // State to toggle profile dropdown
@@ -59,13 +60,19 @@ const Navbar = () => {
                       onClick={() => setIsProfileOpen(!isProfileOpen)}
                       className="flex items-center gap-2 p-1 pr-3 rounded-full border border-emerald-100 hover:bg-emerald-50 transition-all"
                     >
-                      <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white overflow-hidden">
-                        {session.user?.image ? (
-                          <img src={session.user.image} alt="Profile" className="w-full h-full object-cover" />
-                        ) : (
-                          <UserIcon size={18} />
-                        )}
-                      </div>
+                     <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white overflow-hidden relative">
+  {session.user?.image ? (
+    <Image 
+      src={session.user.image} 
+      alt="Profile" 
+      fill // 2. Fill the parent container
+      className="object-cover"
+      referrerPolicy="no-referrer" // 3. Required for Google profile images
+    />
+  ) : (
+    <UserIcon size={18} />
+  )}
+</div>
                       <span className="text-sm font-semibold text-emerald-900">
                         {session.user?.name?.split(' ')[0] || "User"}
                       </span>
@@ -115,15 +122,25 @@ const Navbar = () => {
         <div className="md:hidden bg-white border-t border-emerald-100 animate-in slide-in-from-top duration-300">
           <div className="px-4 py-4 space-y-2">
             {session && (
-              <div className="flex items-center gap-3 pb-4 mb-2 border-b border-emerald-50">
-                <div className="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center text-white">
-                  {session.user?.image ? <img src={session.user.image} className="rounded-full" /> : <UserIcon />}
-                </div>
-                <div>
-                  <p className="font-bold text-emerald-900">{session.user?.name}</p>
-                  <p className="text-xs text-slate-500">{session.user?.email}</p>
-                </div>
-              </div>
+             <div className="flex items-center gap-3 pb-4 mb-2 border-b border-emerald-50">
+  <div className="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center text-white overflow-hidden relative">
+    {session.user?.image ? (
+      <Image 
+        src={session.user.image} 
+        alt={session.user.name || "User"} 
+        fill 
+        className="rounded-full object-cover"
+        referrerPolicy="no-referrer" 
+      />
+    ) : (
+      <UserIcon />
+    )}
+  </div>
+  <div>
+    <p className="font-bold text-emerald-900">{session.user?.name}</p>
+    <p className="text-xs text-slate-500">{session.user?.email}</p>
+  </div>
+</div>
             )}
             {navLinks.map((link) => (
               <Link

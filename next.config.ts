@@ -8,6 +8,13 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      // ADD THIS SECTION FOR GOOGLE PROFILE IMAGES
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };
