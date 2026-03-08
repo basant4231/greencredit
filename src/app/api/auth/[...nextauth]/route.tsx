@@ -25,7 +25,7 @@ export const authOptions:NextAuthOptions = {
 
           if (!user) throw new Error("No user found with this email");
 
-          const passwordMatch = await bcrypt.compare(password, user.password);
+          const passwordMatch = await bcrypt.compare(password as string, user.password as string);
           if (!passwordMatch) throw new Error("Incorrect password");
 
           return user; // NextAuth now creates a session for this user
