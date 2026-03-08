@@ -1,34 +1,56 @@
 import React from 'react';
 
-const activities = [
-  { id: 1, title: "Planted a Tree", date: "2 hours ago", points: "+50", status: "Approved" },
-  { id: 2, title: "Used Public Transit", date: "Yesterday", points: "+20", status: "Approved" },
-  { id: 3, title: "Recycled Plastic", date: "Feb 28", points: "+15", status: "Pending" },
-];
+// 1. Define the Interface for the activities array
+interface Activity {
+  _id: string;
+  activityType: string;
+  creditsEarned: number;
+  status: string;
+  createdAt: string | Date;
+}
 
-export default function RecentHistory() {
+interface RecentHistoryProps {
+  activities: Activity[];
+}
+
+// 2. Accept the 'activities' prop in the function
+export default function RecentHistory({ activities }: RecentHistoryProps) {
   return (
-    <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col h-full">
-      <h3 className="font-bold text-slate-800 text-lg mb-6">History of Recent Activities</h3>
-      <div className="space-y-4 flex-1">
-        {activities.map((activity) => (
-          <div key={activity.id} className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-2xl transition-all border border-transparent hover:border-slate-100">
-            <div>
-              <p className="text-sm font-bold text-slate-800">{activity.title}</p>
-              <p className="text-xs text-slate-400">{activity.date}</p>
+    <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm h-full">
+      <h3 className="font-bold text-slate-800 text-lg mb-6">Recent Activities</h3>
+      
+      <div className="space-y-4">
+        {activities.length > 0 ? (
+          activities.map((activity) => (
+            <div key={activity._id.toString()} className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-xl transition-colors">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                  {/* You can add dynamic icons based on activityType here */}
+                  🌱
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-slate-800 capitalize">
+                    {activity.activityType}
+                  </p>
+                  <p className="text-xs text-slate-400">
+                    {new Date(activity.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-sm font-bold text-emerald-600">+{activity.creditsEarned}</p>
+                <p className="text-[10px] uppercase tracking-wider text-slate-400 font-medium">
+                  {activity.status}
+                </p>
+              </div>
             </div>
-            <div className="text-right">
-              <span className="text-sm font-bold text-emerald-600 block">{activity.points}</span>
-              <span className={`text-[10px] font-bold ${activity.status === 'Pending' ? 'text-amber-500' : 'text-slate-400'}`}>
-                {activity.status}
-              </span>
-            </div>
+          ))
+        ) : (
+          <div className="text-center py-8 text-slate-400 text-sm italic">
+            No recent activities found.
           </div>
-        ))}
+        )}
       </div>
-      <button className="w-full mt-6 py-3 text-sm font-semibold text-emerald-600 bg-emerald-50 rounded-xl hover:bg-emerald-100 transition-colors">
-        View All History
-      </button>
     </div>
   );
 }

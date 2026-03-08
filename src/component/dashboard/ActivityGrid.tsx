@@ -1,13 +1,23 @@
 import React from 'react';
 
-export default function ActivityGrid() {
+// 1. Define the Interface to tell TypeScript what props to expect
+interface ActivityGridProps {
+  userId: string;
+}
+
+// 2. Accept the props in the function arguments
+export default function ActivityGrid({ userId }: ActivityGridProps) {
   // Mocking 112 days of data
   const days = Array.from({ length: 112 });
 
   return (
     <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="font-bold text-slate-800 text-lg">Daily Activity</h3>
+        <div>
+          <h3 className="font-bold text-slate-800 text-lg">Daily Activity</h3>
+          {/* Optional: Show who this data belongs to for debugging */}
+          <p className="text-[10px] text-slate-400">User ID: {userId.substring(0, 8)}...</p>
+        </div>
         <span className="text-xs text-slate-400 font-medium">Last 4 Months</span>
       </div>
       
