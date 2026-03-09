@@ -9,6 +9,10 @@ import { signIn } from 'next-auth/react';
 
 const bgImage = "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2070&auto=format&fit=crop";
 
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Something went wrong";
+}
+
 export default function SignUp() {
   const router = useRouter();
   const [step, setStep] = useState(1); // 1: Info, 2: OTP
@@ -37,8 +41,8 @@ export default function SignUp() {
       if (!response.ok) throw new Error(data.message || "Failed to send OTP");
 
       setStep(2); // Move to OTP entry
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(getErrorMessage(err));
     } finally {
       setIsLoading(false);
     }
@@ -54,11 +58,9 @@ export default function SignUp() {
       const response = await fetch('/api/auth/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          email: formData.email, 
+        body: JSON.stringify({
+          email: formData.email,
           otp,
-          name: formData.name,      // We send these again to create the user
-          password: formData.password 
         }),
       });
 
@@ -66,8 +68,8 @@ export default function SignUp() {
       if (!response.ok) throw new Error(data.message || "Invalid OTP");
 
       router.push('/login?message=Email verified! You can now log in.');
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(getErrorMessage(err));
     } finally {
       setIsLoading(false);
     }
@@ -131,7 +133,7 @@ export default function SignUp() {
   autoComplete="one-time-code" // Tells the browser: "This is a special OTP field"
   placeholder="000000" 
   className="w-full bg-white/5 border border-white/30 text-white rounded-lg py-3 pl-4 pr-4 text-center tracking-[1em] font-bold focus:outline-none focus:border-emerald-500" 
-  onChange={(e) => setOtp(e.target.value)} 
+  onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))} 
 />
               </div>
               <button type="submit" disabled={isLoading} className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-2">

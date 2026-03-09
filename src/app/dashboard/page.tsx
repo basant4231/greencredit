@@ -15,6 +15,18 @@ interface AggregatedStats {
   totalEnergy: number;
 }
 
+type ActivityCategory = "Transportation" | "Waste" | "Energy" | "Planting";
+type ActivityStatus = "pending" | "approved" | "rejected";
+
+interface RecentActivityRaw {
+  _id: { toString(): string } | string;
+  title: string;
+  category: ActivityCategory;
+  creditsEarned: number;
+  status: ActivityStatus;
+  createdAt: Date | string;
+}
+
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
 
@@ -52,10 +64,23 @@ export default async function DashboardPage() {
   ]);
 
   // 5. Fetch Recent Activities with lean() for better performance
-  const recentActivities = await Activity.find({ userId: userId })
+  const recentActivitiesRaw = await Activity.find({ userId: userId })
     .sort({ createdAt: -1 })
     .limit(5)
-    .lean();
+    .select("_id title category creditsEarned status createdAt")
+    .lean<RecentActivityRaw[]>();
+
+  const recentActivities = recentActivitiesRaw.map((activity) => ({
+    _id: activity._id.toString(),
+    title: activity.title,
+    category: activity.category,
+    creditsEarned: activity.creditsEarned,
+    status: activity.status,
+    createdAt:
+      activity.createdAt instanceof Date
+        ? activity.createdAt.toISOString()
+        : new Date(activity.createdAt).toISOString(),
+  }));
 
   const dashboardStats = statsResult[0] || { totalCredits: 0, totalCo2: 0, totalEnergy: 0 };
 
@@ -65,7 +90,7 @@ export default async function DashboardPage() {
         <h1 className="text-3xl font-bold text-slate-900">
           Welcome, {session.user.name || "User"}
         </h1>
-        <p className="text-slate-500 italic">"Your actions today define our planet tomorrow."</p>
+        <p className="text-slate-500 italic">&ldquo;Your actions today define our planet tomorrow.&rdquo;</p>
       </header>
 
       <StatCards 
@@ -80,7 +105,7 @@ export default async function DashboardPage() {
           <ActivityGrid userId={userInDb._id.toString()} />
         </div>
         <div className="lg:col-span-1">
-          <RecentHistory activities={JSON.parse(JSON.stringify(recentActivities))} />
+          <RecentHistory activities={recentActivities} />
         </div>
       </div>
     </div>

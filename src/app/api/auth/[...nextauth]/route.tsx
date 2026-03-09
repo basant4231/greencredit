@@ -1,4 +1,4 @@
-import NextAuth, { NextAuthOptions, } from "next-auth";
+import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import dbConnect from "@/lib/dbConnect";
 import User from "@/models/User";
@@ -6,99 +6,116 @@ import bcrypt from "bcryptjs";
 import GoogleProvider from "next-auth/providers/google";
 import Activity from "@/models/Activity";
 
-export const authOptions:NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
-    // 1. Google OAuth Provider
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
     CredentialsProvider({
       name: "credentials",
-      credentials: {}, // We handle the input in our custom logic
-      async authorize(credentials: any) {
-        const { email, password } = credentials;
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        const email = credentials?.email;
+        const password = credentials?.password;
 
-        try {
-          await dbConnect();
-          const user = await User.findOne({ email }).select("+password");
-
-          if (!user) throw new Error("No user found with this email");
-
-          const passwordMatch = await bcrypt.compare(password as string, user.password as string);
-          if (!passwordMatch) throw new Error("Incorrect password");
-
-          return user; // NextAuth now creates a session for this user
-        } catch (error: any) {
-          throw new Error(error.message);
+        if (typeof email !== "string" || typeof password !== "string") {
+          return null;
         }
+
+        await dbConnect();
+        const user = await User.findOne({ email }).select("+password");
+
+        if (!user?.password) {
+          return null;
+        }
+
+        const passwordMatch = await bcrypt.compare(password, user.password as string);
+        if (!passwordMatch) {
+          return null;
+        }
+
+        return {
+          id: user._id.toString(),
+          name: user.name,
+          email: user.email,
+          image: user.image ?? null,
+        };
       },
     }),
   ],
   callbacks: {
-    // 3. The Session Callback
-    // This ensures the user's ID from MongoDB is available in the frontend 'session' object
-    async session({ session, token }: any) {
-      if (session.user) {
-        session.user.id = token.sub; // This links the session to the DB user ID
+    async session({ session, token }) {
+      if (session.user && token.sub) {
+        session.user.id = token.sub;
       }
       return session;
     },
-    
-    // 4. The Sign-In Callback (Optional but professional)
-    // You can use this to block certain users or log activity
-async signIn({ user, account }: any) {
-  if (account.provider === "google") {
-    try {
-      await dbConnect(); // One-time connection
-      
-      const existingUser = await User.findOne({ email: user.email });
 
-      if (!existingUser) {
-        // Create user first
-        const newUser = await User.create({
-          name: user.name,
-          email: user.email,
-          image: user.image,
-          role: 'user',
-        });
-
-        // Optimization: Don't 'await' the Activity creation
-        // Let it run in the background while the user is redirected
-        Activity.create({
-          userId: newUser._id,
-          title: "Initial Eco-Bonus",
-          category: "Energy",
-          creditsEarned: 50,
-          status: "approved"
-        }).catch(err => console.error("Background Activity Error:", err)); 
-
-      } else {
-        // Use updateOne instead of .save() to reduce round-trips
-        User.updateOne(
-          { _id: existingUser._id },
-          { $set: { name: user.name, image: user.image } }
-        ).catch(err => console.error("Background Update Error:", err));
+    async signIn({ user, account }) {
+      if (account?.provider !== "google") {
+        return true;
       }
-      return true; 
-    } catch (error) {
-      console.error("Sign-In Latency Error:", error);
-      return false;
-    }
-  }
-  return true;
-}
-// Inside your authOptions object
 
+      if (!user.email) {
+        return false;
+      }
+
+      const safeName = user.name ?? "Eco User";
+
+      try {
+        await dbConnect();
+
+        const existingUser = await User.findOne({ email: user.email });
+
+        if (!existingUser) {
+          const newUser = await User.create({
+            name: safeName,
+            email: user.email,
+            image: user.image ?? undefined,
+            role: "user",
+          });
+
+          void Activity.create({
+            userId: newUser._id,
+            title: "Initial Eco-Bonus",
+            category: "Energy",
+            creditsEarned: 50,
+            status: "approved",
+          }).catch((error: unknown) => {
+            console.error("Background Activity Error:", error);
+          });
+        } else {
+          const updates: { name: string; image?: string } = { name: safeName };
+          if (user.image) {
+            updates.image = user.image;
+          }
+
+          void User.updateOne(
+            { _id: existingUser._id },
+            { $set: updates }
+          ).catch((error: unknown) => {
+            console.error("Background Update Error:", error);
+          });
+        }
+
+        return true;
+      } catch (error) {
+        console.error("Sign-In Latency Error:", error);
+        return false;
+      }
+    },
   },
 
-
   session: {
-    strategy: "jwt", // Use JSON Web Tokens for fast session checks
+    strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/login", // Points to your custom login page
+    signIn: "/login",
   },
 };
 

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
+import bcrypt from "bcryptjs";
 import { Resend } from 'resend'; // 1. Import Resend
 import dbConnect from '@/lib/dbConnect';
 import Otp from '@/models/Otp';
@@ -7,10 +8,23 @@ import User from '@/models/User';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+interface SignupRequestBody {
+  name: string;
+  email: string;
+  password: string;
+}
+
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Unexpected error";
+}
+
 export async function POST(request: Request) {
   try {
     await dbConnect();
-    const { name, email, password } = await request.json();
+    const body = (await request.json()) as Partial<SignupRequestBody>;
+    const name = typeof body.name === "string" ? body.name.trim() : "";
+    const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+    const password = typeof body.password === "string" ? body.password : "";
 
     // Basic server-side validation
     if (!name || !email || password.length < 8) {
@@ -24,11 +38,15 @@ export async function POST(request: Request) {
 
     // Generate 6-digit OTP
     const generatedOtp = crypto.randomInt(100000, 999999).toString();
+    const [otpHash, passwordHash] = await Promise.all([
+      bcrypt.hash(generatedOtp, 10),
+      bcrypt.hash(password, 10),
+    ]);
 
     // Store/Update OTP in MongoDB
     await Otp.findOneAndUpdate(
       { email },
-      { otp: generatedOtp, createdAt: new Date() },
+      { name, passwordHash, otpHash, createdAt: new Date() },
       { upsert: true, new: true }
     );
 
@@ -60,8 +78,8 @@ export async function POST(request: Request) {
       email 
     }, { status: 200 });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Resend Error:", error);
-    return NextResponse.json({ message: "Failed to send OTP", error: error.message }, { status: 500 });
+    return NextResponse.json({ message: "Failed to send OTP", error: getErrorMessage(error) }, { status: 500 });
   }
 }

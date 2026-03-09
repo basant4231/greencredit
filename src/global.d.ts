@@ -1,11 +1,21 @@
-import { Connection } from 'mongoose';
+import type { Mongoose } from "mongoose";
+import type { DefaultSession } from "next-auth";
 
 declare global {
-  // This allows us to use global.mongoose without TypeScript errors
-  var mongoose: {
-    conn: Connection | null;
-    promise: Promise<Connection> | null;
-  };
+  var mongoose:
+    | {
+        conn: Mongoose | null;
+        promise: Promise<Mongoose> | null;
+      }
+    | undefined;
+}
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+    } & DefaultSession["user"];
+  }
 }
 
 export {};

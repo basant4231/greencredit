@@ -84,7 +84,7 @@ function LoginContent() {
               <div className="relative group">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 w-5 h-5 group-focus-within:text-white" />
                 <input 
-                  type="password" required placeholder="••••••••"
+                  type="password" required placeholder="********"
                   className="w-full bg-white/5 border border-white/30 text-white rounded-lg py-3 pl-12 pr-4 focus:outline-none focus:border-white/60 focus:bg-white/10 transition-all"
                   onChange={(e) => setFormData({...formData, password: e.target.value})}
                 />
@@ -97,7 +97,7 @@ function LoginContent() {
           </form>
 
           <div className="mt-6 text-center text-sm text-white/80">
-            Don't have an account? <Link href="/signup" className="text-blue-400 font-bold hover:underline ml-1">Sign Up</Link>
+            Don&apos;t have an account? <Link href="/signup" className="text-blue-400 font-bold hover:underline ml-1">Sign Up</Link>
           </div>
         </div>
 

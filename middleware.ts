@@ -3,7 +3,7 @@ import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server"; 
 
 export default withAuth(
-  function middleware(req) {
+  function middleware() {
     // This allows the request to continue if authenticated
     return NextResponse.next();
   },

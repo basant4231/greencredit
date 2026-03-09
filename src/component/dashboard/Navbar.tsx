@@ -5,7 +5,7 @@ export default function Navbar() {
   return (
     <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 px-8 flex items-center justify-between sticky top-0 z-30 shrink-0">
       <h2 className="text-slate-500 italic hidden sm:block">
-        "Small steps, big impact."
+        &ldquo;Small steps, big impact.&rdquo;
       </h2>
       
       <div className="flex items-center gap-6 ml-auto">
