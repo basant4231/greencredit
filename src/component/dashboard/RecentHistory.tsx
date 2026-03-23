@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Car, Leaf, Recycle, Zap } from "lucide-react";
 
 type ActivityCategory = "Transportation" | "Waste" | "Energy" | "Planting";
@@ -34,43 +35,54 @@ function getCategoryIcon(category: ActivityCategory) {
 function getStatusTextClass(status: ActivityStatus) {
   switch (status) {
     case "approved":
-      return "text-emerald-600";
+      return "bg-emerald-50 text-emerald-600";
     case "rejected":
-      return "text-rose-500";
+      return "bg-rose-50 text-rose-500";
     case "pending":
-      return "text-amber-500";
+      return "bg-amber-50 text-amber-500";
     default:
-      return "text-slate-400";
+      return "bg-slate-100 text-slate-400";
   }
 }
 
 export default function RecentHistory({ activities }: RecentHistoryProps) {
   return (
     <div className="h-full rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h3 className="mb-6 text-lg font-bold text-slate-800">Recent Activities</h3>
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <h3 className="text-lg font-bold text-slate-800">Recent Activities</h3>
+        <Link href="/dashboard/activities" className="text-sm font-semibold text-emerald-600 hover:text-emerald-700">
+          View all
+        </Link>
+      </div>
 
       <div className="space-y-4">
         {activities.length > 0 ? (
           activities.map((activity) => (
             <div
               key={activity._id}
-              className="flex items-center justify-between rounded-xl p-3 transition-colors hover:bg-slate-50"
+              className="flex items-center justify-between rounded-2xl border border-transparent p-3 transition-colors hover:border-slate-200 hover:bg-slate-50"
             >
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
                   {getCategoryIcon(activity.category)}
                 </div>
                 <div>
-                  <p className="text-sm font-semibold capitalize text-slate-800">{activity.title}</p>
+                  <p className="text-sm font-semibold text-slate-800">{activity.title}</p>
                   <p className="text-xs text-slate-400">
-                    {new Date(activity.createdAt).toLocaleDateString()}
+                    {new Date(activity.createdAt).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-sm font-bold text-emerald-600">+{activity.creditsEarned}</p>
+                <p className={`text-sm font-bold ${activity.status === "pending" ? "text-amber-600" : "text-emerald-600"}`}>
+                  {activity.status === "pending" ? "Pending" : `+${activity.creditsEarned}`}
+                </p>
                 <p
-                  className={`text-[10px] font-medium uppercase tracking-wider ${getStatusTextClass(activity.status)}`}
+                  className={`mt-1 inline-flex rounded-full px-2 py-1 text-[10px] font-medium uppercase tracking-wider ${getStatusTextClass(activity.status)}`}
                 >
                   {activity.status}
                 </p>

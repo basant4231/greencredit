@@ -68,7 +68,7 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-slate-500">
-          <p>© 2026 EcoCredit Management System. All rights reserved.</p>
+          <p>&copy; 2026 EcoCredit Management System. All rights reserved.</p>
           <p>
             Designed & Developed by <span className="text-emerald-500 font-bold">Basant Sharma</span>
           </p>

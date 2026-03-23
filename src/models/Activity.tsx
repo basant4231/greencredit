@@ -21,6 +21,15 @@ export interface IActivity {
   // This Date object is what colors your GitHub-style grid
   createdAt: Date;
   updatedAt?: Date;
+
+  verificationMetadata?: {
+    extractedDate?: string;
+    extractedStation?: string;
+    userLocation?: { lat: number; lng: number };
+    distanceToStation?: number;
+    aiAuditReason?: string;
+  };
+  proofImage?: string;
 }
 
 // A helper type for the 'Stat Cards' at the top of your dashboard
@@ -52,7 +61,15 @@ const ActivitySchema = new Schema<IActivity>({
     enum: ["pending", "approved", "rejected"], 
     default: "pending" 
   },
-  createdAt: { type: Date, default: Date.now }, // This powers your GitHub grid!
+  createdAt: { type: Date, default: Date.now },
+  verificationMetadata: {
+    extractedDate: String,
+    extractedStation: String,
+    userLocation: { lat: Number, lng: Number },
+    distanceToStation: Number,
+    aiAuditReason: String,
+  },
+  proofImage: { type: String, required: false },
 });
 
 const Activity = models.Activity || model("Activity", ActivitySchema);

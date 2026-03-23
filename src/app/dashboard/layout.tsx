@@ -1,34 +1,29 @@
 "use client";
 export const dynamic = 'force-dynamic';
 import Sidebar from "@/component/dashboard/Sidebar";
-import { useSession } from "next-auth/react"; // Import the hook to check login status
+import { useSession } from "next-auth/react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { data: session, status } = useSession(); // Get session and loading status
+  const { data: session, status } = useSession();
 
-  // Optional: Prevent layout jumping by showing a subtle loading state
   if (status === "loading") {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-[#f8fafc]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
+      <div className="flex h-screen w-full items-center justify-center bg-slate-50">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-slate-200 border-t-emerald-600"></div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen w-full bg-[#f8fafc] overflow-hidden">
-      
-      {/* 1. CONDITIONAL SIDEBAR */}
-      {/* This only renders if the user is authenticated */}
+    <div className="flex h-screen w-full overflow-hidden bg-slate-50">
       {session && (
         <div className="hidden md:flex flex-col h-full border-r border-slate-800 bg-slate-900 overflow-y-auto scrollbar-hide">
           <Sidebar />
         </div>
       )}
 
-      {/* 2. INDEPENDENT MAIN AREA */}
       <div className="flex-1 flex flex-col h-full overflow-y-auto">
-        <main className="p-8 max-w-7xl w-full mx-auto">
+        <main className="w-full max-w-7xl mx-auto px-5 py-6 sm:px-8 sm:py-8">
           {children}
         </main>
       </div>

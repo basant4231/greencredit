@@ -7,15 +7,14 @@ export default function Navbar() {
       <h2 className="text-slate-500 italic hidden sm:block">
         &ldquo;Small steps, big impact.&rdquo;
       </h2>
-      
+
       <div className="flex items-center gap-6 ml-auto">
         <button className="text-slate-400 hover:text-emerald-600 transition-colors">
           <Bell size={20} />
         </button>
-        
+
         <div className="flex items-center gap-3 border-l border-slate-200 pl-6">
           <div className="text-right">
-            {/* Using the user's name from context */}
             <p className="text-sm font-bold text-slate-800">Basant Sharma</p>
             <p className="text-[10px] uppercase font-bold text-emerald-600 tracking-widest">Eco Warrior</p>
           </div>
