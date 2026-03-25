@@ -1,5 +1,4 @@
 "use client";
-export const dynamic = 'force-dynamic';
 import Sidebar from "@/component/dashboard/Sidebar";
 import { useSession } from "next-auth/react";
 
