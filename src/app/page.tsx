@@ -15,8 +15,6 @@ export default async function Home() {
       <FeaturedArticle />
       <StatsRibbon />
       <Features isLoggedIn={isLoggedIn} />
-
-      {/* You can add more sections like 'Features' or 'About' here later */}
     </>
   );
 }

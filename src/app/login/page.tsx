@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, Suspense } from 'react'; // Added Suspense
+import React, { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -8,13 +8,12 @@ import { signIn } from 'next-auth/react';
 
 const bgImage = "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2070&auto=format&fit=crop";
 
-// 1. Move all the logic and JSX into a separate content component
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const message = searchParams.get('message'); 
+  const message = searchParams.get('message');
   const error1 = searchParams.get("error");
-  
+
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -45,7 +44,6 @@ function LoginContent() {
       </div>
 
       <div className="relative z-10 w-full max-w-md">
-        {/* Success Message from Signup */}
         {message && (
           <div className="mb-4 p-3 bg-emerald-500/20 border border-emerald-500/30 text-emerald-200 text-sm rounded-xl flex items-center gap-2 backdrop-blur-md">
             <CheckCircle2 size={18} /> {message}
@@ -71,10 +69,10 @@ function LoginContent() {
               <label className="block text-xs font-bold text-white uppercase tracking-widest mb-2 ml-1">Email</label>
               <div className="relative group">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 w-5 h-5 group-focus-within:text-white" />
-                <input 
+                <input
                   type="email" required placeholder="johndoe@gmail.com"
                   className="w-full bg-white/5 border border-white/30 text-white rounded-lg py-3 pl-12 pr-4 focus:outline-none focus:border-white/60 focus:bg-white/10 transition-all"
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
             </div>
@@ -83,10 +81,10 @@ function LoginContent() {
               <label className="block text-xs font-bold text-white uppercase tracking-widest mb-2 ml-1">Password</label>
               <div className="relative group">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 w-5 h-5 group-focus-within:text-white" />
-                <input 
+                <input
                   type="password" required placeholder="********"
                   className="w-full bg-white/5 border border-white/30 text-white rounded-lg py-3 pl-12 pr-4 focus:outline-none focus:border-white/60 focus:bg-white/10 transition-all"
-                  onChange={(e) => setFormData({...formData, password: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 />
               </div>
             </div>
@@ -101,7 +99,6 @@ function LoginContent() {
           </div>
         </div>
 
-        {/* Divider */}
         <div className="relative my-8">
           <div className="absolute inset-0 flex items-center" aria-hidden="true">
             <div className="w-full border-t border-white/10"></div>
@@ -113,7 +110,6 @@ function LoginContent() {
           </div>
         </div>
 
-        {/* Google Button */}
         <button
           type="button"
           onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
@@ -132,7 +128,6 @@ function LoginContent() {
   );
 }
 
-// 2. The default export now wraps the content in a Suspense boundary
 export default function Login() {
   return (
     <Suspense fallback={

@@ -1,11 +1,10 @@
-// src/app/layout.tsx
-
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/component/Navbar"; // Using the '@' alias for src
+import Navbar from "@/component/Navbar";
 import Footer from "@/component/Footer";
 import Providers from "@/component/Providers";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,16 +20,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {/* The Navbar stays here and doesn't re-render on page changes */}
-      <Providers>
-        <Navbar />
-        <main className="min-h-screen bg-slate-50">
-          {children}
-        </main>
-        <Footer />
+        <Providers>
+          <Navbar />
+          <main className="min-h-screen bg-slate-50">
+            {children}
+          </main>
+          <Footer />
         </Providers>
-     
-        {/* You can add a Footer here later too! */}
       </body>
     </html>
   );

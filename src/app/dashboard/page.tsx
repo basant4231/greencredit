@@ -43,7 +43,6 @@ export default async function DashboardPage() {
   }
 
   await dbConnect();
-
   const userInDb = await User.findOne({ email: session.user.email }) as IUser | null;
 
   if (!userInDb) {

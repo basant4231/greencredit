@@ -3,7 +3,11 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import dbConnect from "@/lib/dbConnect";
 import { getDistanceInKm, NEAREST_METRO } from "@/lib/geoUtils";
-import { verifyMetroTicketWithAI } from "@/lib/metroTicketAI";
+import {
+  verifyMetroTicketWithAI,
+  type MetroTicketAIResult,
+  type MetroTicketVerdict,
+} from "@/lib/metroTicketAI";
 import Activity from "@/models/Activity";
 import User from "@/models/User";
 
@@ -42,6 +46,18 @@ function getVerificationErrorMessage(message: string) {
   }
 
   return "Ticket verification could not be completed right now. Please try again.";
+}
+
+function getMetroRejectionMessage(verdict: MetroTicketVerdict) {
+  switch (verdict) {
+    case "INVALID_NOT_METRO":
+      return "Invalid image: this does not appear to be a metro ticket.";
+    case "INVALID_LOW_CONFIDENCE":
+      return "This image could not be confidently verified as a metro ticket.";
+    case "INVALID_UNCLEAR_IMAGE":
+    default:
+      return "Image is too unclear to verify. Please upload a clearer metro ticket photo.";
+  }
 }
 
 export async function POST(request: Request) {
@@ -106,7 +122,7 @@ export async function POST(request: Request) {
     const metroTestMode = isMetroTestModeEnabled();
 
     if (isMetro && image instanceof File) {
-      let verificationResult;
+      let verificationResult: MetroTicketAIResult;
       console.log("[verifyRoute] Metro verification requested:", {
         fileName: image.name,
         fileType: image.type,
@@ -115,6 +131,7 @@ export async function POST(request: Request) {
 
       if (metroTestMode) {
         verificationResult = {
+          verdict: "VALID_METRO_TICKET",
           isValid: true,
           confidence: 1,
           reason: "Developer test mode approved this upload.",
@@ -146,6 +163,7 @@ export async function POST(request: Request) {
         awardedCredits = 0;
         awardedCo2 = 0;
         awardedEnergy = 0;
+        auditReason = getMetroRejectionMessage(verificationResult.verdict);
       }
     }
 
