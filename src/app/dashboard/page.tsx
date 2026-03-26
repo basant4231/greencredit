@@ -51,6 +51,12 @@ export default async function DashboardPage() {
 
   const userId = userInDb._id;
 
+  // ⚡ Bolt Optimization: Only fetch activities from the last ~4 months (113 days)
+  // since the ActivityGrid component only displays data up to 112 days old.
+  // This prevents loading unbounded historical records into memory as the user's history grows.
+  const fourMonthsAgo = new Date();
+  fourMonthsAgo.setDate(fourMonthsAgo.getDate() - 113);
+
   const [statsResult, recentActivitiesRaw, activityDatesRaw] = await Promise.all([
     Activity.aggregate<AggregatedStats>([
       { $match: { userId: userId, status: "approved" } },
@@ -68,7 +74,10 @@ export default async function DashboardPage() {
       .limit(5)
       .select("_id title category creditsEarned status createdAt")
       .lean<RecentActivityRaw[]>(),
-    Activity.find({ userId: userId })
+    Activity.find({
+      userId: userId,
+      createdAt: { $gte: fourMonthsAgo }
+    })
       .select("createdAt")
       .lean<ActivityDateRaw[]>(),
   ]);

@@ -1,0 +1,3 @@
+## 2024-03-26 - Unbounded Date Fetches for Time-Bound UIs
+**Learning:** Found a specific anti-pattern in `src/app/dashboard/page.tsx` where an unbounded database query (`Activity.find().select("createdAt")`) was fetching ALL historical dates, even though the frontend component (`ActivityGrid.tsx`) only ever rendered the last 112 days (4 months). Over time, this would cause significant memory and bandwidth overhead for long-term users.
+**Action:** Always verify if a visual component that represents a fixed time window (like a GitHub contribution graph) is being fed by an unbounded database query, and add `$gte` date bounds to the query if it is.
