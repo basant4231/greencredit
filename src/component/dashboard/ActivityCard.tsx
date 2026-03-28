@@ -112,14 +112,14 @@ export default function ActivityCard({
   };
 
   return (
-    <div className={`group ${accentColor} p-8 rounded-[2.5rem] border ${borderColor} flex flex-col md:flex-row gap-10 transition-all hover:shadow-xl`}>
+    <div className={`group ${accentColor} p-8 rounded-[2.5rem] border ${borderColor} backdrop-blur-xl flex flex-col md:flex-row gap-10 transition-all hover:shadow-2xl hover:shadow-emerald-500/10`}>
       <div className="flex-1 flex flex-col justify-between">
         <div className="space-y-5">
           <div className="flex items-center gap-4">
-            <div className="p-3.5 bg-white rounded-2xl shadow-sm text-slate-700">{icon}</div>
-            <h3 className="text-2xl font-black text-slate-900 tracking-tight">{title}</h3>
+            <div className="p-3.5 bg-zinc-950/50 rounded-2xl shadow-sm text-emerald-500 ring-1 ring-white/10">{icon}</div>
+            <h3 className="text-2xl font-black text-zinc-100 tracking-tight">{title}</h3>
           </div>
-          <p className="text-slate-600 text-sm leading-relaxed max-w-xl">{description}</p>
+          <p className="text-zinc-400 text-sm leading-relaxed max-w-xl">{description}</p>
 
           {type === 'Metro' && (
             <div className="pt-2">
@@ -127,24 +127,24 @@ export default function ActivityCard({
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="group/btn flex items-center gap-3 px-5 py-3 border-2 border-dashed border-slate-300 rounded-2xl text-slate-600 hover:border-emerald-400 hover:text-emerald-600 transition-all"
+                  className="group/btn flex items-center gap-3 px-5 py-3 border-2 border-dashed border-zinc-700 rounded-2xl text-zinc-500 hover:border-emerald-500 hover:text-emerald-500 transition-all bg-zinc-950/20"
                 >
                   <Upload size={20} className="group-hover/btn:-translate-y-1 transition-transform" />
                   <span className="text-sm font-bold">Upload Metro Ticket</span>
                 </button>
               ) : (
-                <div className="relative w-32 h-32 rounded-2xl overflow-hidden border-2 border-emerald-500 shadow-lg bg-white">
+                <div className="relative w-32 h-32 rounded-2xl overflow-hidden border-2 border-emerald-500/50 shadow-lg bg-zinc-950">
                   {previewUrl ? (
-                    <Image src={previewUrl} alt="Metro ticket preview" fill className="object-cover" />
+                    <Image src={previewUrl} alt="Metro ticket preview" fill className="object-cover opacity-80" />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-emerald-50 text-xs font-semibold text-emerald-700">
+                    <div className="flex h-full w-full items-center justify-center bg-emerald-500/10 text-xs font-semibold text-emerald-500">
                       Preparing preview...
                     </div>
                   )}
                   <button
                     type="button"
                     onClick={() => setSelectedFile(null)}
-                    className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full shadow-md hover:scale-110 transition-transform"
+                    className="absolute top-1 right-1 p-1 bg-rose-500 text-white rounded-full shadow-md hover:scale-110 transition-transform z-10"
                   >
                     <X size={14} />
                   </button>
@@ -168,7 +168,7 @@ export default function ActivityCard({
             type="button"
             onClick={handleVerify}
             disabled={isLoading || (type === 'Metro' && !selectedFile)}
-            className={`w-fit px-10 py-4 ${buttonColor} text-white font-black rounded-2xl shadow-lg transition-all active:scale-95 disabled:opacity-50 flex items-center gap-3`}
+            className={`w-fit px-10 py-4 ${buttonColor} text-white font-black rounded-2xl shadow-lg shadow-emerald-500/20 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-3`}
           >
             {isLoading ? (
               <>

@@ -73,53 +73,54 @@ export default function SignUp() {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col justify-center items-center px-4 overflow-hidden">
+    <div className="relative min-h-screen flex flex-col justify-center items-center px-4 overflow-hidden bg-zinc-950">
       <div className="absolute inset-0 z-0">
-        <Image src={bgImage} alt="Background" fill className="object-cover blur-sm brightness-50" priority />
+        <Image src={bgImage} alt="Background" fill className="object-cover blur-sm brightness-[0.2]" priority />
+        <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/50 via-transparent to-zinc-950/90" />
       </div>
 
       <div className="relative z-10 w-full max-w-md">
-        <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20 shadow-2xl">
+        <div className="bg-zinc-900/50 backdrop-blur-2xl p-8 rounded-3xl border border-white/10 shadow-2xl">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white tracking-tight">
+            <h1 className="text-3xl font-black text-zinc-100 tracking-tight">
               {step === 1 ? "Create Account" : "Verify Email"}
             </h1>
-            <p className="text-white/60 mt-2">
+            <p className="text-zinc-500 font-medium mt-2">
               {step === 1 ? "Join the EcoCredit movement" : `Enter the code sent to ${formData.email}`}
             </p>
           </div>
 
-          {error && <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 text-red-200 text-sm rounded-xl text-center">{error}</div>}
+          {error && <div className="mb-4 p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm font-bold rounded-2xl text-center">{error}</div>}
 
           {step === 1 ? (
             <form onSubmit={handleSignupSubmit} className="space-y-5">
               <div className="relative group">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 w-5 h-5 group-focus-within:text-white" />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 w-5 h-5 group-focus-within:text-emerald-500 transition-colors" />
                 <input
                   type="text"
                   required
                   placeholder="Full Name"
-                  className="w-full bg-white/5 border border-white/30 text-white rounded-lg py-3 pl-12 pr-4 focus:outline-none focus:border-white/60 focus:bg-white/10"
+                  className="w-full bg-zinc-950/50 border border-white/10 text-zinc-100 placeholder:text-zinc-700 rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:border-emerald-500/50 focus:bg-zinc-950 transition-all"
                   value={formData.name || ''}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
               </div>
               <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 w-5 h-5 group-focus-within:text-white" />
-                <input type="email" required placeholder="Email Address" className="w-full bg-white/5 border border-white/30 text-white rounded-lg py-3 pl-12 pr-4 focus:outline-none focus:border-white/60 focus:bg-white/10" onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 w-5 h-5 group-focus-within:text-emerald-500 transition-colors" />
+                <input type="email" required placeholder="Email Address" className="w-full bg-zinc-950/50 border border-white/10 text-zinc-100 placeholder:text-zinc-700 rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:border-emerald-500/50 focus:bg-zinc-950 transition-all" onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
               </div>
               <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 w-5 h-5 group-focus-within:text-white" />
-                <input type="password" required placeholder="Password (8+ chars)" className="w-full bg-white/5 border border-white/30 text-white rounded-lg py-3 pl-12 pr-4 focus:outline-none focus:border-white/60 focus:bg-white/10" onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 w-5 h-5 group-focus-within:text-emerald-500 transition-colors" />
+                <input type="password" required placeholder="Password (8+ chars)" className="w-full bg-zinc-950/50 border border-white/10 text-zinc-100 placeholder:text-zinc-700 rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:border-emerald-500/50 focus:bg-zinc-950 transition-all" onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
               </div>
-              <button type="submit" disabled={isLoading} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-2">
+              <button type="submit" disabled={isLoading} className="w-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black py-4 rounded-2xl shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-70">
                 {isLoading ? <Loader2 className="animate-spin" /> : <>Next <ArrowRight size={18}/></>}
               </button>
             </form>
           ) : (
             <form onSubmit={handleVerifySubmit} className="space-y-6">
               <div className="relative group">
-                <Key className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 w-5 h-5 group-focus-within:text-white" />
+                <Key className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 w-5 h-5 group-focus-within:text-emerald-500 transition-colors" />
                 <input
                   type="text"
                   required
@@ -127,28 +128,28 @@ export default function SignUp() {
                   value={otp}
                   autoComplete="one-time-code"
                   placeholder="000000"
-                  className="w-full bg-white/5 border border-white/30 text-white rounded-lg py-3 pl-4 pr-4 text-center tracking-[1em] font-bold focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-zinc-950/50 border border-white/10 text-zinc-100 placeholder:text-zinc-700 rounded-2xl py-3 pl-4 pr-4 text-center tracking-[1em] font-black focus:outline-none focus:border-emerald-500/50 focus:bg-zinc-950 transition-all"
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
                 />
               </div>
-              <button type="submit" disabled={isLoading} className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-2">
+              <button type="submit" disabled={isLoading} className="w-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black py-4 rounded-2xl shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-70">
                 {isLoading ? <Loader2 className="animate-spin" /> : "Verify & Create Account"}
               </button>
-              <button type="button" onClick={() => setStep(1)} className="w-full text-white/50 text-sm hover:text-white">Back to Signup</button>
+              <button type="button" onClick={() => setStep(1)} className="w-full text-zinc-500 text-sm font-bold hover:text-zinc-300 transition-colors">Back to Signup</button>
             </form>
           )}
 
-          <div className="mt-6 text-center text-sm text-white/80">
-            Already a member? <Link href="/login" className="text-emerald-400 font-bold hover:underline ml-1">Log in</Link>
+          <div className="mt-8 text-center text-sm font-medium text-zinc-500">
+            Already a member? <Link href="/login" className="text-emerald-500 font-bold hover:text-emerald-400 ml-1 transition-colors">Log in</Link>
           </div>
         </div>
 
         <div className="relative my-8">
           <div className="absolute inset-0 flex items-center" aria-hidden="true">
-            <div className="w-full border-t border-white/10"></div>
+            <div className="w-full border-t border-white/5"></div>
           </div>
-          <div className="relative flex justify-center text-xs uppercase font-medium">
-            <span className="bg-[#0f172a] px-4 text-white tracking-widest">
+          <div className="relative flex justify-center text-[10px] uppercase font-black">
+            <span className="bg-zinc-950 px-4 text-zinc-500 tracking-[0.2em]">
               Or continue with
             </span>
           </div>
@@ -157,7 +158,7 @@ export default function SignUp() {
         <button
           type="button"
           onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-          className="w-full bg-white/10 hover:bg-white/20 text-white font-medium py-3 rounded-lg border border-white/30 transition-all flex items-center justify-center gap-3 active:scale-95"
+          className="w-full bg-zinc-900/50 hover:bg-zinc-800 text-zinc-100 font-bold py-4 rounded-2xl border border-white/10 transition-all flex items-center justify-center gap-3 active:scale-95"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />

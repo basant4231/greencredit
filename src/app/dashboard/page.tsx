@@ -37,7 +37,7 @@ export default async function DashboardPage() {
   if (!session || !session.user?.email) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-slate-500">Please log in to view your dashboard</p>
+        <p className="text-zinc-500 font-medium">Please log in to view your dashboard</p>
       </div>
     );
   }
@@ -94,17 +94,17 @@ export default async function DashboardPage() {
   const dashboardStats = statsResult[0] || { totalCredits: 0, totalCo2: 0, totalEnergy: 0 };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">
+          <h1 className="text-3xl font-bold text-zinc-100 tracking-tight">
             Welcome, {session.user.name || "User"}
           </h1>
-          <p className="mt-2 text-slate-500 italic">&ldquo;Your actions today define our planet tomorrow.&rdquo;</p>
+          <p className="mt-2 text-zinc-500 italic font-medium">&ldquo;Your actions today define our planet tomorrow.&rdquo;</p>
         </div>
         <Link
           href="/dashboard/activities"
-          className="inline-flex w-fit items-center rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
+          className="inline-flex w-fit items-center rounded-2xl bg-emerald-500 px-6 py-3 text-sm font-bold text-zinc-950 transition-all hover:bg-emerald-400 shadow-lg shadow-emerald-500/20 active:scale-95"
         >
           Add Activity
         </Link>

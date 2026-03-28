@@ -8,16 +8,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (status === "loading") {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-slate-50">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-slate-200 border-t-emerald-600"></div>
+      <div className="flex h-screen w-full items-center justify-center bg-zinc-950">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-zinc-800 border-t-emerald-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-slate-50">
+    <div className="flex h-screen w-full overflow-hidden bg-zinc-950 text-zinc-100">
       {session && (
-        <div className="hidden md:flex flex-col h-full border-r border-slate-800 bg-slate-900 overflow-y-auto scrollbar-hide">
+        <div className="hidden md:flex flex-col h-full border-r border-white/5 bg-zinc-900/50 backdrop-blur-xl overflow-y-auto scrollbar-hide">
           <Sidebar />
         </div>
       )}

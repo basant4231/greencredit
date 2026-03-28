@@ -4,10 +4,10 @@ interface ActivityGridProps {
 
 const DAYS_TO_SHOW = 112;
 const LEVEL_CLASSES = [
-  "bg-slate-100",
-  "bg-emerald-200",
-  "bg-emerald-400",
-  "bg-emerald-600",
+  "bg-zinc-800",
+  "bg-emerald-900/40",
+  "bg-emerald-700/60",
+  "bg-emerald-500",
 ];
 
 function getDateKey(date: Date) {
@@ -64,15 +64,15 @@ export default function ActivityGrid({ activityDates }: ActivityGridProps) {
   const maxCount = Math.max(...days.map((day) => day.count), 1);
 
   return (
-    <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+    <div className="bg-zinc-900/50 backdrop-blur-xl p-6 rounded-3xl border border-white/5 transition-all hover:border-emerald-500/30">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="font-bold text-slate-800 text-lg">Daily Activity</h3>
-          <p className="mt-1 text-xs text-slate-400">
+          <h3 className="font-bold text-zinc-100 text-lg">Daily Activity</h3>
+          <p className="mt-1 text-xs text-zinc-500">
             {activeDays} active day{activeDays === 1 ? "" : "s"} in the last 4 months.
           </p>
         </div>
-        <span className="text-xs text-slate-400 font-medium">Last 4 Months</span>
+        <span className="text-xs text-zinc-500 font-medium uppercase tracking-wider">Last 4 Months</span>
       </div>
 
       <div className="overflow-x-auto">
@@ -80,7 +80,7 @@ export default function ActivityGrid({ activityDates }: ActivityGridProps) {
           {days.map((day) => (
             <div
               key={day.key}
-              className={`w-4 h-4 rounded-[2px] cursor-pointer transition-colors ${LEVEL_CLASSES[getIntensity(day.count, maxCount)]}`}
+              className={`w-4 h-4 rounded-[2px] cursor-pointer transition-colors ring-1 ring-white/5 ${LEVEL_CLASSES[getIntensity(day.count, maxCount)]}`}
               title={`${day.date.toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
@@ -91,12 +91,12 @@ export default function ActivityGrid({ activityDates }: ActivityGridProps) {
         </div>
       </div>
 
-      <div className="mt-6 flex items-center gap-2 text-xs text-slate-400">
+      <div className="mt-6 flex items-center gap-2 text-xs text-zinc-500">
         <span>Less</span>
-        <div className="w-3 h-3 bg-slate-100 rounded-[2px]" />
-        <div className="w-3 h-3 bg-emerald-200 rounded-[2px]" />
-        <div className="w-3 h-3 bg-emerald-400 rounded-[2px]" />
-        <div className="w-3 h-3 bg-emerald-600 rounded-[2px]" />
+        <div className="w-3 h-3 bg-zinc-800 rounded-[2px] ring-1 ring-white/5" />
+        <div className="w-3 h-3 bg-emerald-900/40 rounded-[2px] ring-1 ring-white/5" />
+        <div className="w-3 h-3 bg-emerald-700/60 rounded-[2px] ring-1 ring-white/5" />
+        <div className="w-3 h-3 bg-emerald-500 rounded-[2px] ring-1 ring-white/5" />
         <span>More</span>
       </div>
     </div>

@@ -38,73 +38,74 @@ function LoginContent() {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col justify-center items-center px-4 overflow-hidden">
+    <div className="relative min-h-screen flex flex-col justify-center items-center px-4 overflow-hidden bg-zinc-950">
       <div className="absolute inset-0 z-0">
-        <Image src={bgImage} alt="Background" fill className="object-cover blur-sm brightness-50" priority />
+        <Image src={bgImage} alt="Background" fill className="object-cover blur-sm brightness-[0.2]" priority />
+        <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/50 via-transparent to-zinc-950/90" />
       </div>
 
       <div className="relative z-10 w-full max-w-md">
         {message && (
-          <div className="mb-4 p-3 bg-emerald-500/20 border border-emerald-500/30 text-emerald-200 text-sm rounded-xl flex items-center gap-2 backdrop-blur-md">
+          <div className="mb-4 p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-bold rounded-2xl flex items-center gap-2 backdrop-blur-xl">
             <CheckCircle2 size={18} /> {message}
           </div>
         )}
 
-        <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20 shadow-2xl">
+        <div className="bg-zinc-900/50 backdrop-blur-2xl p-8 rounded-3xl border border-white/10 shadow-2xl">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white tracking-tight">Welcome Back</h1>
-            <p className="text-white/60 mt-2">Sign in to manage your green credits.</p>
+            <h1 className="text-3xl font-black text-zinc-100 tracking-tight">Welcome Back</h1>
+            <p className="text-zinc-500 font-medium mt-2">Sign in to manage your green credits.</p>
           </div>
 
           {error1 === "AccountExists" && (
-            <div className="mb-4 p-3 bg-amber-500/20 border border-amber-500/30 text-amber-200 text-sm rounded-xl text-center">
+            <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm font-bold rounded-2xl text-center">
               This email is already registered with a password. Please log in with your credentials to link your Google account.
             </div>
           )}
 
-          {error && <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 text-red-200 text-sm rounded-xl text-center">{error}</div>}
+          {error && <div className="mb-4 p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm font-bold rounded-2xl text-center">{error}</div>}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-xs font-bold text-white uppercase tracking-widest mb-2 ml-1">Email</label>
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-2 ml-1">Email</label>
               <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 w-5 h-5 group-focus-within:text-white" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 w-5 h-5 group-focus-within:text-emerald-500 transition-colors" />
                 <input
                   type="email" required placeholder="johndoe@gmail.com"
-                  className="w-full bg-white/5 border border-white/30 text-white rounded-lg py-3 pl-12 pr-4 focus:outline-none focus:border-white/60 focus:bg-white/10 transition-all"
+                  className="w-full bg-zinc-950/50 border border-white/10 text-zinc-100 placeholder:text-zinc-700 rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:border-emerald-500/50 focus:bg-zinc-950 transition-all"
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-white uppercase tracking-widest mb-2 ml-1">Password</label>
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-2 ml-1">Password</label>
               <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 w-5 h-5 group-focus-within:text-white" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 w-5 h-5 group-focus-within:text-emerald-500 transition-colors" />
                 <input
                   type="password" required placeholder="********"
-                  className="w-full bg-white/5 border border-white/30 text-white rounded-lg py-3 pl-12 pr-4 focus:outline-none focus:border-white/60 focus:bg-white/10 transition-all"
+                  className="w-full bg-zinc-950/50 border border-white/10 text-zinc-100 placeholder:text-zinc-700 rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:border-emerald-500/50 focus:bg-zinc-950 transition-all"
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 />
               </div>
             </div>
 
-            <button type="submit" disabled={isLoading} className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-2 disabled:opacity-70 transition-all">
+            <button type="submit" disabled={isLoading} className="w-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black py-4 rounded-2xl shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 disabled:opacity-70 transition-all active:scale-95">
               {isLoading ? <><Loader2 className="animate-spin" size={18} /> Verifying...</> : "Sign In"}
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-white/80">
-            Don&apos;t have an account? <Link href="/signup" className="text-blue-400 font-bold hover:underline ml-1">Sign Up</Link>
+          <div className="mt-8 text-center text-sm font-medium text-zinc-500">
+            Don&apos;t have an account? <Link href="/signup" className="text-emerald-500 font-bold hover:text-emerald-400 ml-1 transition-colors">Sign Up</Link>
           </div>
         </div>
 
         <div className="relative my-8">
           <div className="absolute inset-0 flex items-center" aria-hidden="true">
-            <div className="w-full border-t border-white/10"></div>
+            <div className="w-full border-t border-white/5"></div>
           </div>
-          <div className="relative flex justify-center text-xs uppercase font-medium">
-            <span className="bg-[#0f172a] px-4 text-white tracking-widest">
+          <div className="relative flex justify-center text-[10px] uppercase font-black">
+            <span className="bg-zinc-950 px-4 text-zinc-500 tracking-[0.2em]">
               Or continue with
             </span>
           </div>
@@ -113,7 +114,7 @@ function LoginContent() {
         <button
           type="button"
           onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-          className="w-full bg-white/10 hover:bg-white/20 text-white font-medium py-3 rounded-lg border border-white/30 transition-all flex items-center justify-center gap-3 active:scale-95"
+          className="w-full bg-zinc-900/50 hover:bg-zinc-800 text-zinc-100 font-bold py-4 rounded-2xl border border-white/10 transition-all flex items-center justify-center gap-3 active:scale-95"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -131,8 +132,8 @@ function LoginContent() {
 export default function Login() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
-        <Loader2 className="text-white animate-spin" size={32} />
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+        <Loader2 className="text-emerald-500 animate-spin" size={32} />
       </div>
     }>
       <LoginContent />
