@@ -6,7 +6,8 @@ import dbConnect from '@/lib/dbConnect';
 import Otp from '@/models/Otp';
 import User from '@/models/User';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resendApiKey = process.env.RESEND_API_KEY;
+const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 interface SignupRequestBody {
   name: string;
@@ -51,6 +52,10 @@ export async function POST(request: Request) {
     );
 
     // 2. Send the Email via Resend
+    if (!resend) {
+      throw new Error("RESEND_API_KEY is not defined");
+    }
+
     // Note: On the Resend free tier, you can only send to your own email 
     // until you verify a custom domain.
     await resend.emails.send({

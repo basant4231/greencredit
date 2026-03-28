@@ -11,23 +11,23 @@ export default function StatCards({ credits, co2, energy }: StatCardsProps) {
     {
       label: "Total Credits",
       value: credits,
-      color: "text-emerald-600",
+      color: "text-emerald-500",
       icon: Leaf,
-      iconBg: "bg-emerald-50 text-emerald-600",
+      iconBg: "bg-emerald-500/10 text-emerald-500",
     },
     {
       label: "CO2 Offset (kg)",
       value: co2,
-      color: "text-sky-600",
+      color: "text-emerald-500",
       icon: Cloud,
-      iconBg: "bg-sky-50 text-sky-600",
+      iconBg: "bg-emerald-500/10 text-emerald-500",
     },
     {
       label: "Energy Saved (kWh)",
       value: energy,
-      color: "text-amber-600",
+      color: "text-emerald-500",
       icon: Zap,
-      iconBg: "bg-amber-50 text-amber-600",
+      iconBg: "bg-emerald-500/10 text-emerald-500",
     },
   ];
 
@@ -36,15 +36,15 @@ export default function StatCards({ credits, co2, energy }: StatCardsProps) {
       {cards.map((card) => (
         <div
           key={card.label}
-          className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+          className="rounded-3xl border border-white/5 bg-zinc-900/50 p-6 backdrop-blur-xl transition-all hover:border-emerald-500/30"
         >
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-sm text-slate-500">{card.label}</p>
-              <h3 className={`mt-3 text-3xl font-bold ${card.color}`}>{card.value}</h3>
+              <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">{card.label}</p>
+              <h3 className={`mt-3 text-3xl font-bold tracking-tight ${card.color}`}>{card.value}</h3>
             </div>
-            <div className={`rounded-2xl p-3 ${card.iconBg}`}>
-              <card.icon size={18} />
+            <div className={`rounded-2xl p-3 ring-1 ring-white/5 ${card.iconBg}`}>
+              <card.icon size={20} />
             </div>
           </div>
         </div>
