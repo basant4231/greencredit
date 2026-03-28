@@ -1,0 +1,3 @@
+## 2024-05-24 - Unbounded Queries for Fixed-Window UI
+**Learning:** Found a performance bottleneck where `Activity.find()` fetches the user's entire activity history to populate a dashboard grid that only displays the last 112 days. This leads to unbounded memory growth and large payload sizes as users accrue more activities over time.
+**Action:** Always add bounds (`$gte`, `$lte`) to database queries when the UI only renders a fixed window of time. Additionally, missing database indexes on queried fields (`userId`, `createdAt`, `status`) result in full collection scans. Added compound indexes to optimize these read paths.
