@@ -51,6 +51,11 @@ export default async function DashboardPage() {
 
   const userId = userInDb._id;
 
+  // ⚡ Bolt: Calculate the cutoff date for the 112-day ActivityGrid
+  const gridStartDate = new Date();
+  gridStartDate.setDate(gridStartDate.getDate() - 111); // Last 112 days including today
+  gridStartDate.setHours(0, 0, 0, 0);
+
   const [statsResult, recentActivitiesRaw, activityDatesRaw] = await Promise.all([
     Activity.aggregate<AggregatedStats>([
       { $match: { userId: userId, status: "approved" } },
@@ -68,7 +73,9 @@ export default async function DashboardPage() {
       .limit(5)
       .select("_id title category creditsEarned status createdAt")
       .lean<RecentActivityRaw[]>(),
-    Activity.find({ userId: userId })
+    // ⚡ Bolt: Only fetch dates for the last 112 days since ActivityGrid only renders that timeframe
+    // This reduces unbounded payload growth from O(N_total) to O(N_recent)
+    Activity.find({ userId: userId, createdAt: { $gte: gridStartDate } })
       .select("createdAt")
       .lean<ActivityDateRaw[]>(),
   ]);

@@ -72,5 +72,10 @@ const ActivitySchema = new Schema<IActivity>({
   proofImage: { type: String, required: false },
 });
 
+// ⚡ Bolt: Add DB indexes to turn full collection scans into index scans on high-traffic read paths
+// This dramatically speeds up queries like Activity.find({ userId, createdAt: { $gte: ... } })
+ActivitySchema.index({ userId: 1, createdAt: -1 });
+ActivitySchema.index({ userId: 1, status: 1 });
+
 const Activity = models.Activity || model("Activity", ActivitySchema);
 export default Activity;
