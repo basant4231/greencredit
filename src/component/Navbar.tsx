@@ -27,7 +27,7 @@ const Navbar = () => {
         <div className="flex justify-between h-16 items-center">
           
           {/* Logo Section */}
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2" aria-label="EcoCredit Home">
             <div className="bg-emerald-600 p-1.5 rounded-lg">
               <LeafyGreen className="text-white w-6 h-6" />
             </div>
@@ -59,6 +59,9 @@ const Navbar = () => {
                     <button 
                       onClick={() => setIsProfileOpen(!isProfileOpen)}
                       className="flex items-center gap-2 p-1 pr-3 rounded-full border border-emerald-100 hover:bg-emerald-50 transition-all"
+                      aria-label="Open user menu"
+                      aria-haspopup="true"
+                      aria-expanded={isProfileOpen}
                     >
                      <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white overflow-hidden relative">
   {session.user?.image ? (
@@ -110,7 +113,13 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-emerald-900">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-emerald-900"
+              aria-label={isOpen ? "Close main menu" : "Open main menu"}
+              aria-expanded={isOpen}
+              aria-controls="mobile-menu"
+            >
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>
@@ -119,7 +128,7 @@ const Navbar = () => {
 
       {/* Mobile Navigation Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white border-t border-emerald-100 animate-in slide-in-from-top duration-300">
+        <div id="mobile-menu" className="md:hidden bg-white border-t border-emerald-100 animate-in slide-in-from-top duration-300">
           <div className="px-4 py-4 space-y-2">
             {session && (
              <div className="flex items-center gap-3 pb-4 mb-2 border-b border-emerald-50">
