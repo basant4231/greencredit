@@ -1,6 +1,6 @@
 import Hero from "@/component/hero";
+import AboutUs from "@/component/AboutUs";
 import Features from "@/component/Feature";
-import FeaturedArticle from "@/component/Featuredarticle";
 import StatsRibbon from "@/component/Ribbon";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
@@ -12,7 +12,7 @@ export default async function Home() {
   return (
     <>
       <Hero isLoggedIn={isLoggedIn} />
-      <FeaturedArticle />
+      <AboutUs />
       <StatsRibbon />
       <Features isLoggedIn={isLoggedIn} />
     </>

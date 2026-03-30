@@ -1,0 +1,158 @@
+.dashboard-shell {
+  --dashboard-page-bg: #f9fafb;
+  --dashboard-surface: #ffffff;
+  --dashboard-surface-alt: #f9fafb;
+  --dashboard-surface-soft: #f3f4f6;
+  --dashboard-sidebar-bg: #ffffff;
+  --dashboard-topbar-bg: #ffffff;
+  --dashboard-border: #e4e7ec;
+  --dashboard-text: #101828;
+  --dashboard-text-muted: #667085;
+  --dashboard-icon-bg: #f3f4f6;
+  --dashboard-hover: #f3f4f6;
+  --dashboard-overlay: rgba(17, 24, 39, 0.5);
+}
+
+.dashboard-shell[data-theme="dark"] {
+  --dashboard-page-bg: #101828;
+  --dashboard-surface: #182230;
+  --dashboard-surface-alt: #111827;
+  --dashboard-surface-soft: rgba(255, 255, 255, 0.05);
+  --dashboard-sidebar-bg: #101828;
+  --dashboard-topbar-bg: #101828;
+  --dashboard-border: #344054;
+  --dashboard-text: rgba(255, 255, 255, 0.92);
+  --dashboard-text-muted: #98a2b3;
+  --dashboard-icon-bg: rgba(255, 255, 255, 0.05);
+  --dashboard-hover: rgba(255, 255, 255, 0.08);
+  --dashboard-overlay: rgba(2, 6, 23, 0.7);
+}
+
+.dashboard-page {
+  background-color: var(--dashboard-page-bg) !important;
+  color: var(--dashboard-text) !important;
+}
+
+.dashboard-surface {
+  background-color: var(--dashboard-surface) !important;
+  border-color: var(--dashboard-border) !important;
+  color: var(--dashboard-text) !important;
+}
+
+.dashboard-surface-alt {
+  background-color: var(--dashboard-surface-alt) !important;
+  border-color: var(--dashboard-border) !important;
+}
+
+.dashboard-surface-soft {
+  background-color: var(--dashboard-surface-soft) !important;
+  border-color: var(--dashboard-border) !important;
+}
+
+.dashboard-sidebar-surface {
+  background-color: var(--dashboard-sidebar-bg) !important;
+  border-color: var(--dashboard-border) !important;
+}
+
+.dashboard-topbar-surface {
+  background-color: var(--dashboard-topbar-bg) !important;
+  border-color: var(--dashboard-border) !important;
+}
+
+.dashboard-text-primary {
+  color: var(--dashboard-text) !important;
+}
+
+.dashboard-text-secondary {
+  color: var(--dashboard-text-muted) !important;
+}
+
+.dashboard-divider {
+  border-color: var(--dashboard-border) !important;
+}
+
+.dashboard-divider-fill {
+  background-color: var(--dashboard-border) !important;
+}
+
+.dashboard-icon-surface {
+  background-color: var(--dashboard-icon-bg) !important;
+  color: var(--dashboard-text-muted) !important;
+}
+
+.dashboard-outline-btn {
+  background-color: var(--dashboard-surface) !important;
+  border-color: var(--dashboard-border) !important;
+  color: var(--dashboard-text-muted) !important;
+}
+
+.dashboard-outline-btn:hover {
+  background-color: var(--dashboard-hover) !important;
+  color: var(--dashboard-text) !important;
+}
+
+.dashboard-dropdown {
+  background-color: var(--dashboard-surface) !important;
+  border-color: var(--dashboard-border) !important;
+}
+
+.dashboard-nav-item {
+  color: var(--dashboard-text-muted) !important;
+}
+
+.dashboard-nav-item:hover {
+  background-color: var(--dashboard-hover) !important;
+  color: var(--dashboard-text) !important;
+}
+
+.dashboard-nav-icon {
+  background-color: var(--dashboard-icon-bg) !important;
+  color: var(--dashboard-text-muted) !important;
+}
+
+.dashboard-input-shell {
+  background-color: var(--dashboard-surface) !important;
+  border-color: var(--dashboard-border) !important;
+  color: var(--dashboard-text) !important;
+}
+
+.dashboard-input-field {
+  color: var(--dashboard-text) !important;
+}
+
+.dashboard-input-field::placeholder {
+  color: var(--dashboard-text-muted) !important;
+}
+
+.dashboard-chip-muted {
+  background-color: var(--dashboard-surface-alt) !important;
+  border-color: var(--dashboard-border) !important;
+  color: var(--dashboard-text-muted) !important;
+}
+
+.dashboard-overlay {
+  background-color: var(--dashboard-overlay) !important;
+}
+
+.dashboard-no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.dashboard-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .dashboard-equal-panel {
+    display: flex;
+    flex-direction: column;
+    height: 470px;
+  }
+
+  .dashboard-scroll-region {
+    flex: 1 1 0%;
+    min-height: 0;
+    overflow-y: auto;
+  }
+}

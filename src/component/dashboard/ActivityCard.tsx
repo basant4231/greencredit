@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Loader2, Upload, CheckCircle2, X, Eye } from 'lucide-react';
+import { ArrowUpRight, CheckCircle2, Loader2, Upload, X } from 'lucide-react';
 
 interface ActivityCardProps {
   type: "Metro" | "Planting";
@@ -34,6 +34,7 @@ export default function ActivityCard({
   const [status, setStatus] = useState<'idle' | 'approved' | 'rejected' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const needsProofUpload = type === 'Metro';
 
   useEffect(() => {
     if (!selectedFile) {
@@ -112,63 +113,114 @@ export default function ActivityCard({
   };
 
   return (
-    <div className={`group ${accentColor} p-8 rounded-[2.5rem] border ${borderColor} flex flex-col md:flex-row gap-10 transition-all hover:shadow-xl`}>
-      <div className="flex-1 flex flex-col justify-between">
-        <div className="space-y-5">
-          <div className="flex items-center gap-4">
-            <div className="p-3.5 bg-white rounded-2xl shadow-sm text-slate-700">{icon}</div>
-            <h3 className="text-2xl font-black text-slate-900 tracking-tight">{title}</h3>
+    <div className={`dashboard-surface grid gap-6 overflow-hidden rounded-[32px] border ${borderColor} bg-white p-6 shadow-[0_28px_55px_-36px_rgba(15,23,42,0.4)] lg:grid-cols-[minmax(0,1.15fr)_320px]`}>
+      <div className="flex flex-col justify-between gap-8">
+        <div className="space-y-6">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className={`inline-flex items-center gap-2 rounded-full ${accentColor} px-4 py-2 text-sm font-semibold text-slate-700`}>
+              {icon}
+              {type}
+            </span>
+            <span className="dashboard-surface-soft dashboard-text-secondary inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
+              Verified flow
+            </span>
           </div>
-          <p className="text-slate-600 text-sm leading-relaxed max-w-xl">{description}</p>
 
-          {type === 'Metro' && (
-            <div className="pt-2">
-              {!selectedFile ? (
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="group/btn flex items-center gap-3 px-5 py-3 border-2 border-dashed border-slate-300 rounded-2xl text-slate-600 hover:border-emerald-400 hover:text-emerald-600 transition-all"
-                >
-                  <Upload size={20} className="group-hover/btn:-translate-y-1 transition-transform" />
-                  <span className="text-sm font-bold">Upload Metro Ticket</span>
-                </button>
-              ) : (
-                <div className="relative w-32 h-32 rounded-2xl overflow-hidden border-2 border-emerald-500 shadow-lg bg-white">
-                  {previewUrl ? (
-                    <Image src={previewUrl} alt="Metro ticket preview" fill className="object-cover" />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-emerald-50 text-xs font-semibold text-emerald-700">
-                      Preparing preview...
-                    </div>
+          <div>
+            <h3 className="dashboard-text-primary text-3xl font-semibold tracking-tight text-slate-950">{title}</h3>
+            <p className="dashboard-text-secondary mt-3 max-w-2xl text-sm leading-7 text-slate-600">{description}</p>
+          </div>
+
+          <div className="dashboard-surface-alt rounded-[28px] border border-slate-200 bg-slate-50/80 p-5">
+            {needsProofUpload ? (
+              <div className="space-y-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="dashboard-text-primary text-sm font-semibold text-slate-900">Upload metro proof</p>
+                    <p className="dashboard-text-secondary mt-1 text-sm text-slate-500">
+                      Add a clear ticket image so the verification flow can confirm the trip details.
+                    </p>
+                  </div>
+                  {!selectedFile && (
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="dashboard-outline-btn inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-emerald-200 hover:text-emerald-600"
+                    >
+                      <Upload size={16} />
+                      Upload
+                    </button>
                   )}
+                </div>
+
+                {selectedFile ? (
+                  <div className="dashboard-surface flex flex-col gap-4 rounded-[24px] border border-emerald-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="dashboard-surface-soft relative h-20 w-20 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
+                        {previewUrl ? (
+                          <Image src={previewUrl} alt="Metro ticket preview" fill className="object-cover" />
+                        ) : (
+                          <div className="dashboard-text-secondary flex h-full w-full items-center justify-center text-xs font-semibold text-slate-500">
+                            Preview
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <p className="dashboard-text-primary text-sm font-semibold text-slate-900">{selectedFile.name}</p>
+                        <p className="dashboard-text-secondary mt-1 text-xs text-slate-500">Ticket image ready for verification.</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedFile(null)}
+                      className="inline-flex items-center gap-2 rounded-full border border-rose-100 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-500 transition hover:bg-rose-100"
+                    >
+                      <X size={16} />
+                      Remove
+                    </button>
+                  </div>
+                ) : (
                   <button
                     type="button"
-                    onClick={() => setSelectedFile(null)}
-                    className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full shadow-md hover:scale-110 transition-transform"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="dashboard-outline-btn flex w-full items-center justify-between rounded-[24px] border border-dashed border-slate-300 bg-white px-5 py-4 text-left transition hover:border-emerald-300"
                   >
-                    <X size={14} />
+                    <div>
+                      <p className="dashboard-text-primary text-sm font-semibold text-slate-900">Choose metro ticket image</p>
+                      <p className="dashboard-text-secondary mt-1 text-sm text-slate-500">
+                        Phone camera captures work well for on-the-go submission.
+                      </p>
+                    </div>
+                    <ArrowUpRight size={18} className="text-slate-400" />
                   </button>
-                </div>
-              )}
+                )}
 
-              <input
-                type="file"
-                ref={fileInputRef}
-                className="hidden"
-                accept="image/*"
-                capture="environment"
-                onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-              />
-            </div>
-          )}
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                />
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <p className="dashboard-text-primary text-sm font-semibold text-slate-900">Instant planting validation</p>
+                <p className="dashboard-text-secondary text-sm leading-6 text-slate-500">
+                  This flow uses your live location and activity type so you can contribute quickly from the dashboard.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="flex flex-col gap-3 mt-8">
+        <div className="flex flex-col gap-3">
           <button
             type="button"
             onClick={handleVerify}
-            disabled={isLoading || (type === 'Metro' && !selectedFile)}
-            className={`w-fit px-10 py-4 ${buttonColor} text-white font-black rounded-2xl shadow-lg transition-all active:scale-95 disabled:opacity-50 flex items-center gap-3`}
+            disabled={isLoading || (needsProofUpload && !selectedFile)}
+            className={`inline-flex w-fit items-center gap-3 rounded-[22px] px-6 py-4 text-sm font-semibold text-white shadow-[0_22px_45px_-26px_rgba(15,23,42,0.55)] transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-55 ${buttonColor}`}
           >
             {isLoading ? (
               <>
@@ -183,25 +235,34 @@ export default function ActivityCard({
                 <X size={20} /> Rejected
               </>
             ) : (
-              'Verify & Contribute'
+              'Verify and contribute'
             )}
           </button>
           {(status === 'approved' || status === 'rejected') && successMessage && (
-            <p className={`text-xs font-bold ml-2 ${status === 'approved' ? 'text-emerald-600' : 'text-rose-500'}`}>
+            <p className={`ml-1 text-sm font-medium ${status === 'approved' ? 'text-emerald-600' : 'text-rose-500'}`}>
               {successMessage}
             </p>
           )}
           {status === 'error' && (
-            <p className="text-xs font-bold text-red-500 ml-2">{errorMessage || 'Verification failed. Please try again.'}</p>
+            <p className="ml-1 text-sm font-medium text-red-500">
+              {errorMessage || 'Verification failed. Please try again.'}
+            </p>
           )}
         </div>
       </div>
 
-      <div className="w-full md:w-80 h-64 md:h-auto rounded-[2rem] overflow-hidden relative shadow-2xl shrink-0 group-hover:rotate-1 transition-transform duration-500">
-        <Image src={image} alt={title} fill className="object-cover brightness-90 group-hover:brightness-100 transition-all" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-        <div className="absolute bottom-6 left-6 flex items-center gap-2 text-white/90 text-xs font-bold uppercase tracking-widest">
-          <Eye size={14} /> Activity Preview
+      <div className="relative min-h-[280px] overflow-hidden rounded-[30px] shadow-[0_24px_55px_-34px_rgba(15,23,42,0.6)]">
+        <Image src={image} alt={title} fill className="object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/15 to-transparent" />
+        <div className="absolute left-5 top-5 rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-white backdrop-blur-sm">
+          Preview
+        </div>
+        <div className="absolute inset-x-5 bottom-5 rounded-[24px] bg-white/12 p-4 text-white backdrop-blur-md">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-100">{type}</p>
+          <p className="mt-2 text-xl font-semibold">{title}</p>
+          <p className="mt-2 text-sm leading-6 text-white/80">
+            Submit this action when you are ready to add a fresh verified credit to your account.
+          </p>
         </div>
       </div>
     </div>

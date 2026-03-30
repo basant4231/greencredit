@@ -1,0 +1,33 @@
+.inner {
+  margin: 0 auto;
+  max-width: 110em;
+  padding: 0 6em 0.1em 6em;
+}
+
+.separator {
+  border-top: 2px solid rgba(188, 198, 204, 0.68);
+  margin: 0 0 4.5rem 0;
+  width: 100%;
+}
+
+@media screen and (max-width: 1680px) {
+  .inner {
+    padding: 0 5em 0.1em 5em;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .inner {
+    padding: 0 4em 0.1em 4em;
+  }
+}
+
+@media screen and (max-width: 736px) {
+  .inner {
+    padding: 0 2em 0.1em 2em;
+  }
+
+  .separator {
+    margin-bottom: 3rem;
+  }
+}
