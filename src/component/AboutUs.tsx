@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import bannerImage from "@/images/banner_image.png";
+import bannerImage from "@/images/banner_image.webp";
 import { openSans, robotoSlab } from "@/lib/fonts";
 import styles from "@/styles/marketing/AboutUs.module.css";
 

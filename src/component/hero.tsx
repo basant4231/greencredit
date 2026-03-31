@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { oswald, sourceSans } from "@/lib/fonts";
 import { useParallaxBackground } from "@/hooks/useParallaxBackground";
 import styles from "@/styles/marketing/Hero.module.css";
-import backgroundHero from "@/images/background_hero.png";
+import backgroundHero from "@/images/background_hero.webp";
 
 interface HeroProps {
   isLoggedIn?: boolean;

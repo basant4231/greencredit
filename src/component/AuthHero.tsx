@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, useRef } from "react";
-import backgroundHero from "@/images/background_hero.png";
+import backgroundHero from "@/images/background_hero.webp";
 import { useParallaxBackground } from "@/hooks/useParallaxBackground";
 import styles from "@/styles/auth/AuthHero.module.css";
 
