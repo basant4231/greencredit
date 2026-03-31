@@ -51,6 +51,13 @@ export default async function DashboardPage() {
 
   const userId = userInDb._id;
 
+  // ⚡ Bolt: Calculate 112 days ago cutoff for ActivityGrid
+  // Why: Only fetching 4 months of data prevents pulling potentially thousands
+  // of unnecessary records, reducing DB load and memory usage significantly
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - 112);
+  cutoffDate.setHours(0, 0, 0, 0);
+
   const [statsResult, recentActivitiesRaw, activityDatesRaw] = await Promise.all([
     Activity.aggregate<AggregatedStats>([
       { $match: { userId: userId, status: "approved" } },
@@ -68,7 +75,10 @@ export default async function DashboardPage() {
       .limit(5)
       .select("_id title category creditsEarned status createdAt")
       .lean<RecentActivityRaw[]>(),
-    Activity.find({ userId: userId })
+    Activity.find({
+        userId: userId,
+        createdAt: { $gte: cutoffDate }
+      })
       .select("createdAt")
       .lean<ActivityDateRaw[]>(),
   ]);

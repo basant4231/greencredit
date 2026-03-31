@@ -1,0 +1,3 @@
+## 2024-05-24 - [Dashboard Query Optimizations]
+**Learning:** Only fetching necessary historical data by using MongoDB's `$gte` filter prevents pulling potentially thousands of unnecessary records, reducing DB load and memory usage significantly.
+**Action:** When a UI component only shows data within a certain time frame (like 4 months for `ActivityGrid`), always filter the database query to match that time frame rather than fetching all data and filtering it in memory.
