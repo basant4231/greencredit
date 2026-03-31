@@ -53,13 +53,25 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-bold mb-6 uppercase text-xs tracking-widest">Connect</h4>
             <div className="flex gap-4 mb-6">
-              <Link href="#" className="p-2 bg-slate-900 rounded-lg hover:bg-emerald-600 transition-all">
+              <Link
+                href="#"
+                aria-label="Github profile"
+                className="p-2 bg-slate-900 rounded-lg hover:bg-emerald-600 transition-all"
+              >
                 <Github size={20} className="text-white" />
               </Link>
-              <Link href="#" className="p-2 bg-slate-900 rounded-lg hover:bg-emerald-600 transition-all">
+              <Link
+                href="#"
+                aria-label="Linkedin profile"
+                className="p-2 bg-slate-900 rounded-lg hover:bg-emerald-600 transition-all"
+              >
                 <Linkedin size={20} className="text-white" />
               </Link>
-              <Link href="#" className="p-2 bg-slate-900 rounded-lg hover:bg-emerald-600 transition-all">
+              <Link
+                href="#"
+                aria-label="Twitter profile"
+                className="p-2 bg-slate-900 rounded-lg hover:bg-emerald-600 transition-all"
+              >
                 <Twitter size={20} className="text-white" />
               </Link>
             </div>

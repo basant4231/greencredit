@@ -58,6 +58,9 @@ const Navbar = () => {
                   <div className="relative">
                     <button 
                       onClick={() => setIsProfileOpen(!isProfileOpen)}
+                      aria-label="Toggle profile menu"
+                      aria-haspopup="true"
+                      aria-expanded={isProfileOpen}
                       className="flex items-center gap-2 p-1 pr-3 rounded-full border border-emerald-100 hover:bg-emerald-50 transition-all"
                     >
                      <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white overflow-hidden relative">
@@ -110,7 +113,12 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-emerald-900">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isOpen}
+              className="text-emerald-900"
+            >
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>
