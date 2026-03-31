@@ -1,0 +1,54 @@
+.section {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+  scroll-margin-top: 4rem;
+}
+
+.background {
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 160%;
+  left: 0;
+  position: absolute;
+  top: -10%;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  width: 100%;
+  will-change: transform;
+  z-index: 0;
+}
+
+.overlay {
+  background: rgba(0, 0, 0, 0.26);
+  inset: 0;
+  position: absolute;
+  z-index: 1;
+}
+
+.content {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  max-width: 960px;
+  padding: 100px 30px;
+  position: relative;
+  width: 100%;
+  z-index: 2;
+}
+
+@media (max-width: 768px) {
+  .background {
+    height: 100%;
+    top: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 80px 20px;
+  }
+}

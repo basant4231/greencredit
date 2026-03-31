@@ -1,163 +1,196 @@
 "use client";
-export const dynamic = 'force-dynamic';
-import { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation'; 
-import { useSession, signOut } from "next-auth/react"; // Added signOut for the profile menu
-import { Menu, X, LeafyGreen, User as UserIcon, LogOut } from 'lucide-react';
-import Image from 'next/image'; // 1. Add this import at the top of Navbar.tsx
+
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
+import { useEffect, useRef, useState } from "react";
+import { LogOut, Menu, User as UserIcon, X } from "lucide-react";
+import { oswald } from "@/lib/fonts";
+import { marketingNavLinks } from "@/lib/siteNavigation";
+import styles from "@/styles/marketing/Navbar.module.css";
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false); // State to toggle profile dropdown
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { data: session, status } = useSession();
   const pathname = usePathname();
-  
-  const isEntryPage = pathname === '/signup' || pathname === '/login';
+  const profileRef = useRef<HTMLDivElement>(null);
 
-  const navLinks = [
-    { name: 'Dashboard', href: '/dashboard' },
-    { name: 'Marketplace', href: '/marketplace' },
-    { name: 'My Credits', href: '/my-credits' },
-    { name: 'Analytics', href: '/analytics' },
-  ];
+  const isHomePage = pathname === "/";
+  const isEntryPage = pathname === "/signup" || pathname === "/login";
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 24);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handlePointerDown = (event: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+
+    return () => document.removeEventListener("mousedown", handlePointerDown);
+  }, []);
+
+  const authHref = session ? "/dashboard" : "/signup";
+  const authLabel = session ? "Dashboard" : "Get Started";
+  const getSectionHref = (sectionId: string) => (isHomePage ? `#${sectionId}` : `/#${sectionId}`);
 
   return (
-    <nav className="bg-white border-b border-emerald-100 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          
-          {/* Logo Section */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="bg-emerald-600 p-1.5 rounded-lg">
-              <LeafyGreen className="text-white w-6 h-6" />
-            </div>
-            <span className="font-bold text-xl text-emerald-900 tracking-tight">
-              Eco<span className="text-emerald-600">Credit</span>
-            </span>
-          </Link>
+    <nav className={`z-50 w-full ${styles.homeNav} ${isScrolled ? styles.homeNavScrolled : ""}`}>
+      <div className={styles.homeInner}>
+        <Link href="/" className={`${oswald.className} ${styles.homeBrand}`}>
+          <span className={styles.brandText}>
+            Eco<span className={styles.brandTextAccent}>Credit</span>
+          </span>
+        </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <Link 
-                key={link.name} 
-                href={link.href}
-                className={`font-medium transition-colors ${
-                  pathname === link.href ? 'text-emerald-600' : 'text-slate-600 hover:text-emerald-600'
-                }`}
-              >
-                {link.name}
-              </Link>
+        <div className={styles.homeDesktop}>
+          <ul className={styles.homeLinks}>
+            {marketingNavLinks.map((link, index) => (
+              <li key={link.sectionId}>
+                <Link
+                  href={getSectionHref(link.sectionId)}
+                  className={`${oswald.className} ${styles.homeLink} ${
+                    isHomePage && index === 0 ? styles.homeLinkActive : ""
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              </li>
             ))}
+          </ul>
 
-            {/* CONDITIONAL AUTH SECTION */}
-            {status !== "loading" && (
-              <>
-                {session ? (
-                  /* 1. PROFILE BUTTON (Logged In) */
-                  <div className="relative">
-                    <button 
-                      onClick={() => setIsProfileOpen(!isProfileOpen)}
-                      className="flex items-center gap-2 p-1 pr-3 rounded-full border border-emerald-100 hover:bg-emerald-50 transition-all"
-                    >
-                     <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white overflow-hidden relative">
-  {session.user?.image ? (
-    <Image 
-      src={session.user.image} 
-      alt="Profile" 
-      fill // 2. Fill the parent container
-      className="object-cover"
-      referrerPolicy="no-referrer" // 3. Required for Google profile images
-    />
-  ) : (
-    <UserIcon size={18} />
-  )}
-</div>
-                      <span className="text-sm font-semibold text-emerald-900">
-                        {session.user?.name?.split(' ')[0] || "User"}
-                      </span>
-                    </button>
+          {!isEntryPage && status !== "loading" && (
+            <>
+              {session ? (
+                <div ref={profileRef} className={styles.homeProfileWrap}>
+                  <button
+                    type="button"
+                    onClick={() => setIsProfileOpen((current) => !current)}
+                    className={styles.homeProfileButton}
+                    aria-expanded={isProfileOpen}
+                    aria-label="Open account menu"
+                  >
+                    <div className={styles.homeAvatar}>
+                      {session.user?.image ? (
+                        <Image
+                          src={session.user.image}
+                          alt="Profile"
+                          fill
+                          className="object-cover"
+                          referrerPolicy="no-referrer"
+                        />
+                      ) : (
+                        <UserIcon size={18} />
+                      )}
+                    </div>
+                    <span className={styles.homeProfileName}>
+                      {session.user?.name?.split(" ")[0] || "User"}
+                    </span>
+                  </button>
 
-                    {/* Simple Dropdown Menu */}
-                    {isProfileOpen && (
-                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-emerald-50 py-2 animate-in fade-in zoom-in duration-200">
-                        <div className="px-4 py-2 border-b border-slate-50 mb-1">
-                           <p className="text-xs text-slate-400 font-medium">Account</p>
-                           <p className="text-sm font-bold text-slate-900 truncate">{session.user?.email}</p>
-                        </div>
-                        <button 
-                          onClick={() => signOut()}
-                          className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                        >
-                          <LogOut size={14} /> Sign Out
-                        </button>
+                  {isProfileOpen && (
+                    <div className={styles.homeDropdown}>
+                      <div className={styles.homeDropdownHeader}>
+                        <p className={styles.homeDropdownLabel}>Account</p>
+                        <p className={styles.homeDropdownEmail}>{session.user?.email}</p>
                       </div>
-                    )}
-                  </div>
-                ) : (
-                  /* 2. GET STARTED BUTTON (Logged Out & Not on Signin/Signup) */
-                  !isEntryPage && (
-                    <Link href="/signup">
-                      <button className="bg-emerald-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-emerald-700 transition-all shadow-md">
-                        Get Started
+                      <button
+                        type="button"
+                        onClick={() => signOut({ callbackUrl: "/" })}
+                        className={styles.homeDropdownAction}
+                      >
+                        <LogOut size={14} /> Sign Out
                       </button>
-                    </Link>
-                  )
-                )}
-              </>
-            )}
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-emerald-900">
-              {isOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
-          </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link href={authHref} className={`${oswald.className} ${styles.homeButton}`}>
+                  {authLabel}
+                </Link>
+              )}
+            </>
+          )}
         </div>
+
+        <button
+          type="button"
+          onClick={() => setIsOpen((current) => !current)}
+          className={styles.homeMenuButton}
+          aria-label="Toggle navigation"
+        >
+          {isOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
       </div>
 
-      {/* Mobile Navigation Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white border-t border-emerald-100 animate-in slide-in-from-top duration-300">
-          <div className="px-4 py-4 space-y-2">
+        <div className={styles.homeMobilePanel}>
+          <div className={styles.homeMobileInner}>
             {session && (
-             <div className="flex items-center gap-3 pb-4 mb-2 border-b border-emerald-50">
-  <div className="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center text-white overflow-hidden relative">
-    {session.user?.image ? (
-      <Image 
-        src={session.user.image} 
-        alt={session.user.name || "User"} 
-        fill 
-        className="rounded-full object-cover"
-        referrerPolicy="no-referrer" 
-      />
-    ) : (
-      <UserIcon />
-    )}
-  </div>
-  <div>
-    <p className="font-bold text-emerald-900">{session.user?.name}</p>
-    <p className="text-xs text-slate-500">{session.user?.email}</p>
-  </div>
-</div>
+              <div className={styles.homeMobileSession}>
+                <div className={styles.homeAvatar}>
+                  {session.user?.image ? (
+                    <Image
+                      src={session.user.image}
+                      alt={session.user.name || "User"}
+                      fill
+                      className="rounded-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <UserIcon />
+                  )}
+                </div>
+                <div>
+                  <p className={styles.homeMobileName}>{session.user?.name}</p>
+                  <p className={styles.homeMobileEmail}>{session.user?.email}</p>
+                </div>
+              </div>
             )}
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="block px-3 py-2 text-slate-700 hover:bg-emerald-50 rounded-lg font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                {link.name}
-              </Link>
-            ))}
+
+            <div className={styles.homeMobileLinks}>
+              {marketingNavLinks.map((link) => (
+                <Link
+                  key={link.sectionId}
+                  href={getSectionHref(link.sectionId)}
+                  className={`${oswald.className} ${styles.homeMobileLink}`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+
             {session ? (
-              <button onClick={() => signOut()} className="w-full text-left px-3 py-2 text-red-600 font-bold">Sign Out</button>
+              <button
+                type="button"
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className={`${oswald.className} ${styles.homeMobileLogout}`}
+              >
+                Sign Out
+              </button>
             ) : (
               !isEntryPage && (
-                <Link href="/signup" onClick={() => setIsOpen(false)}>
-                  <button className="w-full mt-2 bg-emerald-600 text-white py-3 rounded-xl font-bold">Sign Up</button>
+                <Link
+                  href={authHref}
+                  onClick={() => setIsOpen(false)}
+                  className={`${oswald.className} ${styles.homeButton} ${styles.homeMobileButton}`}
+                >
+                  {authLabel}
                 </Link>
               )
             )}

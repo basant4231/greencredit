@@ -1,0 +1,120 @@
+.section {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+  scroll-margin-top: 4rem;
+}
+
+.background {
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 160%;
+  left: 0;
+  position: absolute;
+  top: -10%;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  width: 100%;
+  will-change: transform;
+  z-index: 0;
+}
+
+.content {
+  max-width: 960px;
+  padding: 100px 30px;
+  position: relative;
+  text-align: center;
+  width: 100%;
+  z-index: 2;
+}
+
+.title {
+  color: rgba(255, 255, 255, 0.96);
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 400;
+  letter-spacing: 12px;
+  line-height: 1.2;
+  margin: 0 0 20px;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: clamp(13px, 1.6vw, 16px);
+  font-weight: 300;
+  letter-spacing: 4px;
+  margin: 0 0 22px;
+  text-transform: uppercase;
+}
+
+.description {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 17px;
+  line-height: 1.85;
+  margin: 0 auto 30px;
+  max-width: 760px;
+}
+
+.inlineLink {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.95);
+  text-decoration: none;
+  text-underline-offset: 3px;
+  transition: color 0.3s ease, border-bottom-color 0.3s ease;
+}
+
+.inlineLink:hover {
+  border-bottom-color: rgba(255, 255, 255, 0.95);
+  color: #ffffff;
+}
+
+.button {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 4px;
+  padding: 14px 45px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.button:hover {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #111111;
+}
+
+@media (max-width: 768px) {
+  .background {
+    height: 100%;
+    top: 0;
+  }
+
+  .title {
+    letter-spacing: 6px;
+  }
+
+  .subtitle {
+    letter-spacing: 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 80px 20px;
+  }
+
+  .title {
+    letter-spacing: 3px;
+  }
+
+  .description {
+    font-size: 15px;
+  }
+}

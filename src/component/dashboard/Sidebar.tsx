@@ -1,60 +1,128 @@
 "use client";
-import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Leaf, History, LogOut } from "lucide-react";
+import { FilePlus2, LayoutDashboard, Leaf, LogOut, MoreHorizontal, X } from "lucide-react";
 import { signOut } from "next-auth/react";
 
+interface SidebarProps {
+  mobileOpen: boolean;
+  isCollapsed: boolean;
+  onClose: () => void;
+}
+
 const navItems = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Activity Log", href: "/dashboard/activities", icon: History },
+  {
+    name: "Dashboard",
+    href: "/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    name: "Activity Studio",
+    href: "/dashboard/activities",
+    icon: FilePlus2,
+  },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ mobileOpen, isCollapsed, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const showExpanded = mobileOpen || !isCollapsed;
 
   return (
-    <aside className="hidden md:flex flex-col w-64 bg-slate-900 border-r border-slate-800 h-screen sticky top-0 shrink-0">
-      <div className="p-6 flex items-center gap-3 border-b border-slate-800">
-        <div className="bg-emerald-500 p-2 rounded-lg">
-          <Leaf size={20} className="text-white" />
-        </div>
-        <div>
-          <span className="block font-bold text-xl text-white tracking-tight">EcoCredit</span>
-          <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500">
-            Dashboard
-          </span>
-        </div>
-      </div>
+    <aside
+      className={`dashboard-sidebar-surface fixed left-0 top-0 z-50 h-screen border-r border-gray-200 bg-white px-5 transition-all duration-300 ${
+        mobileOpen ? "translate-x-0" : "-translate-x-full"
+      } ${showExpanded ? "w-[290px]" : "w-[90px]"} lg:translate-x-0`}
+    >
+      <div className="flex h-full flex-col overflow-hidden">
+        <div className={`flex items-center py-8 ${showExpanded ? "justify-between" : "justify-center"}`}>
+          <Link href="/dashboard" className="flex items-center gap-3" onClick={onClose}>
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#465FFF] text-white">
+              <Leaf size={20} />
+            </span>
 
-      <nav className="flex-1 p-4 space-y-2 mt-3">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`flex items-center gap-3 p-3 rounded-xl font-medium transition-all ${
-                isActive
-                ? "bg-emerald-600/10 text-emerald-400 shadow-[inset_0_0_0_1px_rgba(16,185,129,0.15)]"
-                : "text-slate-400 hover:bg-slate-800 hover:text-white"
-              }`}
+            {showExpanded && (
+              <span>
+                <span className="dashboard-text-primary block text-lg font-semibold tracking-tight text-gray-900">GreenCredit</span>
+                <span className="block text-[11px] font-semibold uppercase tracking-[0.26em] text-[#465FFF]">
+                  Admin dashboard
+                </span>
+              </span>
+            )}
+          </Link>
+
+          {mobileOpen && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="dashboard-outline-btn flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition lg:hidden"
+              aria-label="Close sidebar"
             >
-              <item.icon size={20} />
-              {item.name}
-            </Link>
-          );
-        })}
-      </nav>
+              <X size={18} />
+            </button>
+          )}
+        </div>
 
-      <div className="p-4 border-t border-slate-800">
-        <button
-          onClick={() => signOut({ callbackUrl: "/login" })}
-          className="flex items-center gap-3 p-3 w-full text-rose-400 hover:bg-rose-500/10 rounded-xl transition-all font-medium"
-        >
-          <LogOut size={20} />
-          Sign Out
-        </button>
+        <div className="flex-1 overflow-y-auto pb-6">
+          <nav className="space-y-6">
+            <div>
+              <div
+                className={`mb-4 flex text-xs font-medium uppercase tracking-[0.18em] text-gray-400 ${
+                  showExpanded ? "justify-start" : "justify-center"
+                }`}
+              >
+                {showExpanded ? <span className="dashboard-text-secondary">Menu</span> : <MoreHorizontal size={16} className="dashboard-text-secondary" />}
+              </div>
+
+              <div className="space-y-2">
+                {navItems.map((item) => {
+                  const isActive =
+                    pathname === item.href ||
+                    (item.href !== "/dashboard" && pathname.startsWith(item.href));
+
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={onClose}
+                      className={`group flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition ${
+                        isActive
+                          ? "bg-[#ECF3FF] text-[#465FFF]"
+                          : "dashboard-nav-item text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      } ${showExpanded ? "justify-start" : "justify-center"}`}
+                    >
+                      <span
+                        className={`grid h-10 w-10 place-items-center rounded-xl ${
+                          isActive
+                            ? "bg-[#DCE7FF] text-[#465FFF]"
+                            : "dashboard-nav-icon bg-gray-100 text-gray-500 group-hover:text-gray-700"
+                        }`}
+                      >
+                        <item.icon size={18} />
+                      </span>
+
+                      {showExpanded && <span>{item.name}</span>}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </nav>
+        </div>
+
+        <div className="dashboard-divider border-t border-gray-200 py-4">
+          <button
+            type="button"
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            className={`dashboard-nav-item flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-100 ${
+              showExpanded ? "justify-start" : "justify-center"
+            }`}
+          >
+            <span className="dashboard-nav-icon grid h-10 w-10 place-items-center rounded-xl bg-gray-100 text-gray-500">
+              <LogOut size={18} />
+            </span>
+            {showExpanded && "Sign Out"}
+          </button>
+        </div>
       </div>
     </aside>
   );

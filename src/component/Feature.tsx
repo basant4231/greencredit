@@ -1,111 +1,130 @@
-import React from 'react';
-import Link from 'next/link';
-import { UserPlus, ClipboardCheck, Wallet, ArrowRight } from 'lucide-react';
+"use client";
 
-const steps = [
-  {
-    id: "01",
-    title: "Register Impact",
-    description: "Create your profile and log sustainable activities like solar installation, tree planting, or waste reduction.",
-    icon: <UserPlus className="w-10 h-10 text-emerald-400" />,
-    color: "bg-emerald-900/30 text-emerald-400"
-  },
-  {
-    id: "02",
-    title: "Expert Verification",
-    description: "Our system uses IoT data and expert review to verify your environmental impact against global standards.",
-    icon: <ClipboardCheck className="w-10 h-10 text-lime-400" />,
-    color: "bg-lime-900/30 text-lime-400"
-  },
-  {
-    id: "03",
-    title: "Receive Credits",
-    description: "Once verified, certified Green Credits are issued to your digital wallet, ready to be traded or held.",
-    icon: <Wallet className="w-10 h-10 text-cyan-400" />,
-    color: "bg-cyan-900/30 text-cyan-400"
-  }
-];
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { UserPlus, ClipboardCheck, Wallet, ArrowRight } from "lucide-react";
+import layoutStyles from "@/styles/marketing/LandingSection.module.css";
 
 interface FeaturesProps {
   isLoggedIn?: boolean;
 }
 
+const smoothEase = [0.22, 1, 0.36, 1] as const;
+
 const Features = ({ isLoggedIn = false }: FeaturesProps) => {
-  const sectionCta = isLoggedIn
-    ? {
-        title: "Ready to track your next green action?",
-        description: "Open your activity workspace and keep building your verified impact history.",
-        href: "/dashboard/activities",
-        label: "Track Activity",
-      }
-    : {
-        title: "Ready to start your first project?",
-        description: "Join 5,000+ eco-enthusiasts making a difference.",
-        href: "/signup",
-        label: "Create Account",
-      };
+  const steps = [
+    {
+      id: "01",
+      title: "Log Your Green Action",
+      desc: "Record eligible work like tree planting, clean energy, recycling, or waste reduction.",
+      icon: <UserPlus className="h-6 w-6" />,
+      accent: "bg-emerald-600",
+      surface: "border-emerald-200 bg-[#f2faf5] text-emerald-700",
+    },
+    {
+      id: "02",
+      title: "Verify Every Submission",
+      desc: "EcoCredit reviews your evidence and supporting data so each action can be trusted.",
+      icon: <ClipboardCheck className="h-6 w-6" />,
+      accent: "bg-[#f56a6a]",
+      surface: "border-[#f3c7ca] bg-[#fff6f7] text-[#d45757]",
+    },
+    {
+      id: "03",
+      title: "Receive EcoCredits",
+      desc: "Approved actions are converted into credits that appear directly in your wallet.",
+      icon: <Wallet className="h-6 w-6" />,
+      accent: "bg-sky-600",
+      surface: "border-sky-200 bg-[#f4faff] text-sky-700",
+    },
+  ];
+
+  const fadeIn = {
+    hidden: { opacity: 0, y: 28 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.95, ease: smoothEase },
+    },
+  };
+
+  const staggerContainer = {
+    hidden: {},
+    visible: {
+      transition: { staggerChildren: 0.22, delayChildren: 0.12 },
+    },
+  };
+
+  const ctaHref = isLoggedIn ? "/dashboard/activities" : "/signup";
+  const ctaLabel = isLoggedIn ? "Open Dashboard" : "Create Account";
+  const ctaDescription = isLoggedIn
+    ? "Head back to your dashboard and keep your verified impact moving."
+    : "Create an account and start building your verified impact record.";
 
   return (
-    <section className="relative overflow-hidden bg-slate-900 py-24">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="mb-16 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+    <section id="services" className="relative scroll-mt-24 bg-white py-24">
+      <div className={layoutStyles.inner}>
+        <div className={layoutStyles.separator} aria-hidden="true" />
+
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+          variants={fadeIn}
+          className="mb-20 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end"
+        >
           <div className="max-w-2xl">
-            <h2 className="mb-3 text-sm font-bold uppercase tracking-widest text-emerald-400">
-              Process Flow
-            </h2>
-            <h3 className="text-4xl font-extrabold leading-tight text-white">
-              A Transparent Path to <br />
-              <span className="text-emerald-400">Environmental Value</span>
+            <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-[#7f888f]">Process Flow</h2>
+            <h3 className="text-5xl font-black tracking-tight text-[#3d4449]">
+              How EcoCredit turns <br /> action into reward
             </h3>
           </div>
-          <p className="max-w-sm text-lg text-slate-400">
-            We bridge the gap between individual green actions and the global carbon market.
+          <p className="max-w-xs text-base leading-relaxed text-[#7f888f]">
+            From submission to verification to earned credits, every step is designed to stay simple and transparent.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="relative grid gap-8 md:grid-cols-3">
-          <div className="absolute left-0 top-1/2 hidden h-px w-full -z-0 bg-slate-700 md:block" />
-
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+          variants={staggerContainer}
+          className="grid gap-6 md:grid-cols-3"
+        >
           {steps.map((step) => (
-            <div
+            <motion.div
               key={step.id}
-              className="group relative z-10 rounded-3xl border border-slate-700 bg-slate-800 p-10 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-900/20"
+              variants={fadeIn}
+              className="group border border-[#bcc6cc] bg-white p-12 shadow-[0_14px_30px_rgba(61,68,73,0.05)] transition-all hover:-translate-y-1 hover:border-[#adb8c0] hover:bg-[#f6f8fa]"
             >
-              <div className="mb-8 flex items-start justify-between">
-                <div className={`${step.color} rounded-2xl border border-white/5 p-4 transition-transform duration-300 group-hover:scale-110`}>
+              <span className={`mb-8 block h-[3px] w-14 rounded-full ${step.accent}`} aria-hidden="true" />
+              <div className="mb-10 flex items-center justify-between text-[#3d4449]">
+                <span className={`flex h-12 w-12 items-center justify-center border ${step.surface}`}>
                   {step.icon}
-                </div>
-                <span className="select-none text-5xl font-black text-slate-700 transition-colors group-hover:text-slate-600">
-                  {step.id}
                 </span>
+                <span className="text-sm font-bold tracking-widest text-[#7f888f]">STEP {step.id}</span>
               </div>
-
-              <h4 className="mb-4 text-2xl font-bold text-white">
-                {step.title}
-              </h4>
-              <p className="mb-6 leading-relaxed text-slate-300">
-                {step.description}
-              </p>
-
-              <button className="flex items-center gap-2 text-sm font-bold text-emerald-400 transition-all group-hover:gap-3">
-                Learn more <ArrowRight size={16} />
-              </button>
-            </div>
+              <h4 className="mb-4 text-xl font-bold text-[#3d4449]">{step.title}</h4>
+              <p className="text-sm leading-relaxed text-[#7f888f]">{step.desc}</p>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        <div className="mt-20 flex flex-col items-center justify-between gap-8 rounded-3xl border border-slate-700 bg-gradient-to-r from-slate-800 to-slate-800/50 p-8 shadow-xl md:flex-row">
-          <div className="text-center text-white md:text-left">
-            <p className="mb-1 text-xl font-bold">{sectionCta.title}</p>
-            <p className="text-emerald-200/70">{sectionCta.description}</p>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.95, delay: 0.28, ease: smoothEase }}
+          className="mt-20 flex flex-col items-center justify-between border border-[#bcc6cc] bg-[#f6f8fa] p-10 shadow-[0_14px_30px_rgba(61,68,73,0.04)] md:flex-row"
+        >
+          <div className="text-center md:text-left">
+            <p className="text-xl font-bold text-[#3d4449]">Ready to earn your first EcoCredits?</p>
+            <p className="text-sm text-[#7f888f]">{ctaDescription}</p>
           </div>
-          <Link
-            href={sectionCta.href}
-            className="whitespace-nowrap rounded-xl bg-lime-400 px-8 py-4 font-black text-black shadow-lg shadow-lime-900/20 transition-colors hover:bg-lime-500"
-          >
-            {sectionCta.label}
+          <Link href={ctaHref} className="mt-8 flex items-center gap-3 bg-[#3d4449] px-8 py-4 text-sm font-bold text-white transition-all hover:bg-black md:mt-0">
+            {ctaLabel} <ArrowRight size={16} />
           </Link>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
