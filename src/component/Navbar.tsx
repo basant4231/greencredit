@@ -42,7 +42,8 @@ const Navbar = () => {
               <Link 
                 key={link.name} 
                 href={link.href}
-                className={`font-medium transition-colors ${
+                aria-current={pathname === link.href ? 'page' : undefined}
+                className={`font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 rounded-md px-2 py-1 ${
                   pathname === link.href ? 'text-emerald-600' : 'text-slate-600 hover:text-emerald-600'
                 }`}
               >
@@ -58,7 +59,10 @@ const Navbar = () => {
                   <div className="relative">
                     <button 
                       onClick={() => setIsProfileOpen(!isProfileOpen)}
-                      className="flex items-center gap-2 p-1 pr-3 rounded-full border border-emerald-100 hover:bg-emerald-50 transition-all"
+                      aria-label="Open profile menu"
+                      aria-haspopup="true"
+                      aria-expanded={isProfileOpen}
+                      className="flex items-center gap-2 p-1 pr-3 rounded-full border border-emerald-100 hover:bg-emerald-50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
                     >
                      <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white overflow-hidden relative">
   {session.user?.image ? (
@@ -110,7 +114,12 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-emerald-900">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isOpen}
+              className="text-emerald-900 p-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+            >
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>
