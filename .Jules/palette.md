@@ -1,0 +1,3 @@
+## 2025-05-14 - Accessible Disclosure Pattern in Navbar
+**Learning:** Disclosure components like mobile menus and profile dropdowns often rely purely on visual cues (icons changing). Screen reader users need `aria-expanded` and `aria-haspopup` to understand that a button controls a menu and whether it is currently open. Pairing these with `aria-label` for icon-only buttons is critical for a baseline accessible experience.
+**Action:** When implementing togglable UI elements, always bind the boolean state to `aria-expanded` and ensure the trigger button has a descriptive name via `aria-label` or `htmlFor`.
