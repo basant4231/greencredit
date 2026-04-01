@@ -51,7 +51,14 @@ export default async function DashboardPage() {
 
   const userId = userInDb._id;
 
+  // Calculate the start date for the activity grid (last 112 days)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const gridStartDate = new Date(today);
+  gridStartDate.setDate(today.getDate() - 111);
+
   const [statsResult, recentActivitiesRaw, activityDatesRaw] = await Promise.all([
+    // Aggregate overall approved stats
     Activity.aggregate<AggregatedStats>([
       { $match: { userId: userId, status: "approved" } },
       {
@@ -63,12 +70,15 @@ export default async function DashboardPage() {
         },
       },
     ]),
+    // Fetch last 5 activities
     Activity.find({ userId: userId })
       .sort({ createdAt: -1 })
       .limit(5)
       .select("_id title category creditsEarned status createdAt")
       .lean<RecentActivityRaw[]>(),
-    Activity.find({ userId: userId })
+    // ⚡ Bolt Optimization: Only fetch activities from the last 112 days
+    // to match the ActivityGrid display limit, reducing unbounded payload sizes
+    Activity.find({ userId: userId, createdAt: { $gte: gridStartDate } })
       .select("createdAt")
       .lean<ActivityDateRaw[]>(),
   ]);

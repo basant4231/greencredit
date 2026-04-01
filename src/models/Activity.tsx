@@ -72,5 +72,11 @@ const ActivitySchema = new Schema<IActivity>({
   proofImage: { type: String, required: false },
 });
 
+// ⚡ Bolt Optimization: Added indexes for common dashboard queries
+// 1. Speeds up recent activities fetch (`userId` + `createdAt` sort)
+// 2. Speeds up aggregated stats match (`userId` + `status` filter)
+ActivitySchema.index({ userId: 1, createdAt: -1 });
+ActivitySchema.index({ userId: 1, status: 1 });
+
 const Activity = models.Activity || model("Activity", ActivitySchema);
 export default Activity;

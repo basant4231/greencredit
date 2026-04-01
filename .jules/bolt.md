@@ -1,0 +1,3 @@
+## 2026-04-01 - [Unbounded Data Fetching for Bounded UI Components]
+**Learning:** The dashboard fetched all lifetime activity dates (`Activity.find({ userId }).select("createdAt")`) to populate an `ActivityGrid` that only shows the last 112 days. This anti-pattern leads to infinitely scaling database load and memory usage as users accumulate more history. Furthermore, the dashboard queries were completely missing database indexes.
+**Action:** Always verify if a data fetch has unbounded scaling (like "all records for a user") and bound it to the UI's actual display limits (e.g., `createdAt: { $gte: limitDate }`). Additionally, ensure heavily queried patterns (like recent history fetching and status aggregations) have explicit compound indexes.
