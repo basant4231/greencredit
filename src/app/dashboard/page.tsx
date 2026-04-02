@@ -68,7 +68,10 @@ export default async function DashboardPage() {
       .limit(5)
       .select("_id title category creditsEarned status createdAt")
       .lean<RecentActivityRaw[]>(),
-    Activity.find({ userId: userId })
+    Activity.find({
+      userId: userId,
+      createdAt: { $gte: new Date(new Date().getTime() - 112 * 24 * 60 * 60 * 1000) }
+    })
       .select("createdAt")
       .lean<ActivityDateRaw[]>(),
   ]);
