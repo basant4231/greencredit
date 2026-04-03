@@ -72,5 +72,9 @@ const ActivitySchema = new Schema<IActivity>({
   proofImage: { type: String, required: false },
 });
 
+// Indexes for Dashboard performance optimizations
+ActivitySchema.index({ userId: 1, status: 1 });
+ActivitySchema.index({ userId: 1, createdAt: -1 });
+
 const Activity = models.Activity || model("Activity", ActivitySchema);
 export default Activity;
