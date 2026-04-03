@@ -1,0 +1,3 @@
+## 2024-04-03 - Missing Database Indexes on Dashboard Queries
+**Learning:** The application heavily relies on querying the `Activity` collection by `userId` combined with `status` (for aggregating stats) and `createdAt` (for fetching recent activities) to populate the dashboard. The lack of compound indexes on these fields is a performance anti-pattern that would lead to full collection scans and significant slowdowns as the user's activity history grows.
+**Action:** Ensure compound indexes (e.g., `{ userId: 1, status: 1 }` and `{ userId: 1, createdAt: -1 }`) are defined on Mongoose schemas to support frequent, data-heavy dashboard queries.

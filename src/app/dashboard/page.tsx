@@ -51,6 +51,12 @@ export default async function DashboardPage() {
 
   const userId = userInDb._id;
 
+  // Calculate the start date for the 112-day activity grid
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const gridStartDate = new Date(today);
+  gridStartDate.setDate(today.getDate() - (112 - 1));
+
   const [statsResult, recentActivitiesRaw, activityDatesRaw] = await Promise.all([
     Activity.aggregate<AggregatedStats>([
       { $match: { userId: userId, status: "approved" } },
@@ -68,7 +74,10 @@ export default async function DashboardPage() {
       .limit(5)
       .select("_id title category creditsEarned status createdAt")
       .lean<RecentActivityRaw[]>(),
-    Activity.find({ userId: userId })
+    Activity.find({
+      userId: userId,
+      createdAt: { $gte: gridStartDate }
+    })
       .select("createdAt")
       .lean<ActivityDateRaw[]>(),
   ]);
