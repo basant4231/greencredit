@@ -51,6 +51,12 @@ export default async function DashboardPage() {
 
   const userId = userInDb._id;
 
+  // Calculate date 112 days ago for the ActivityGrid
+  const daysToShow = 112;
+  const startDate = new Date();
+  startDate.setHours(0, 0, 0, 0);
+  startDate.setDate(startDate.getDate() - (daysToShow - 1));
+
   const [statsResult, recentActivitiesRaw, activityDatesRaw] = await Promise.all([
     Activity.aggregate<AggregatedStats>([
       { $match: { userId: userId, status: "approved" } },
@@ -68,7 +74,8 @@ export default async function DashboardPage() {
       .limit(5)
       .select("_id title category creditsEarned status createdAt")
       .lean<RecentActivityRaw[]>(),
-    Activity.find({ userId: userId })
+    // Prevent over-fetching by only requesting dates that will be displayed in ActivityGrid
+    Activity.find({ userId: userId, createdAt: { $gte: startDate } })
       .select("createdAt")
       .lean<ActivityDateRaw[]>(),
   ]);
