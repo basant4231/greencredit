@@ -1,0 +1,3 @@
+## 2024-05-24 - [Overfetching and Missing Indexes in Next.js Dashboard]
+**Learning:** The dashboard fetched the *entire* history of user activities just to render the `ActivityGrid` (which only requires the last 112 days). In Mongoose, this can become a major bottleneck for power users. Furthermore, without a compound index on `{ userId: 1, createdAt: -1 }`, the "recent activities" feed scan becomes O(N) rather than O(1).
+**Action:** Always verify if a `.find()` query in Next.js Server Components needs a `$gte` date limit when used for visualization. Additionally, always add compound indexes to Mongoose schemas for fields used in `.sort()` and `.aggregate($match)`.
