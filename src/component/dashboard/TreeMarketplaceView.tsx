@@ -334,6 +334,10 @@ export default function TreeMarketplaceView({ mapsApiKey }: TreeMarketplaceViewP
         const googleWindow = getGoogleWindow();
         const googleMaps = googleWindow.google;
 
+        if (!googleMaps) {
+          throw new Error("Google Maps unavailable");
+        }
+
         if (!mapInstanceRef.current) {
           mapInstanceRef.current = new googleMaps.maps.Map(mapRef.current, {
             center: originRef.current,

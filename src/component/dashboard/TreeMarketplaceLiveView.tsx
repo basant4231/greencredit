@@ -292,7 +292,10 @@ function getOriginLabel(results: GoogleMapsGeocoderResult[] | null) {
   return firstResult.formatted_address?.split(",").slice(0, 2).join(", ") || "Near you";
 }
 
-function toPlaceModel(result: GoogleMapsPlaceResult, origin: LatLngLiteral) {
+function toPlaceModel(
+  result: GoogleMapsPlaceResult,
+  origin: LatLngLiteral
+): TreeMarketplacePlace | null {
   const location = result.geometry?.location;
   const placeId = result.place_id;
   const name = result.name;

@@ -113,6 +113,10 @@ function getOriginLabel(response: GeocodeResponse) {
   return firstResult.formatted_address?.split(",").slice(0, 2).join(", ") || "Near you";
 }
 
+function getOriginAddress(response: GeocodeResponse) {
+  return response.results?.[0]?.formatted_address || "Current location";
+}
+
 async function fetchJson<T>(input: string, init?: RequestInit) {
   const response = await fetch(input, {
     ...init,
@@ -240,6 +244,7 @@ export async function GET(request: NextRequest) {
       const emptyResponse: TreeMarketplaceResponse = {
         origin: { lat, lng },
         originLabel: getOriginLabel(geocodeResponse),
+        originAddress: getOriginAddress(geocodeResponse),
         places: [],
       };
 
@@ -303,6 +308,7 @@ export async function GET(request: NextRequest) {
     const response: TreeMarketplaceResponse = {
       origin: { lat, lng },
       originLabel: getOriginLabel(geocodeResponse),
+      originAddress: getOriginAddress(geocodeResponse),
       places: marketplacePlaces,
     };
 
