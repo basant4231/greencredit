@@ -24,14 +24,14 @@ const Features = ({ isLoggedIn = false }: FeaturesProps) => {
     {
       id: "02",
       title: "Verify Every Submission",
-      desc: "EcoCredit reviews your evidence and supporting data so each action can be trusted.",
+      desc: "Eco Credit reviews your evidence and supporting data so each action can be trusted.",
       icon: <ClipboardCheck className="h-6 w-6" />,
       accent: "bg-[#f56a6a]",
       surface: "border-[#f3c7ca] bg-[#fff6f7] text-[#d45757]",
     },
     {
       id: "03",
-      title: "Receive EcoCredits",
+      title: "Receive Eco Credits",
       desc: "Approved actions are converted into credits that appear directly in your wallet.",
       icon: <Wallet className="h-6 w-6" />,
       accent: "bg-sky-600",
@@ -76,7 +76,7 @@ const Features = ({ isLoggedIn = false }: FeaturesProps) => {
           <div className="max-w-2xl">
             <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-[#7f888f]">Process Flow</h2>
             <h3 className="text-5xl font-black tracking-tight text-[#3d4449]">
-              How EcoCredit turns <br /> action into reward
+              How Eco Credit turns <br /> action into reward
             </h3>
           </div>
           <p className="max-w-xs text-base leading-relaxed text-[#7f888f]">
@@ -118,7 +118,7 @@ const Features = ({ isLoggedIn = false }: FeaturesProps) => {
           className="mt-20 flex flex-col items-center justify-between border border-[#bcc6cc] bg-[#f6f8fa] p-10 shadow-[0_14px_30px_rgba(61,68,73,0.04)] md:flex-row"
         >
           <div className="text-center md:text-left">
-            <p className="text-xl font-bold text-[#3d4449]">Ready to earn your first EcoCredits?</p>
+            <p className="text-xl font-bold text-[#3d4449]">Ready to earn your first Eco Credits?</p>
             <p className="text-sm text-[#7f888f]">{ctaDescription}</p>
           </div>
           <Link href={ctaHref} className="mt-8 flex items-center gap-3 bg-[#3d4449] px-8 py-4 text-sm font-bold text-white transition-all hover:bg-black md:mt-0">

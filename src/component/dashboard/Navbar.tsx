@@ -3,18 +3,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import {
-  Bell,
   ChevronDown,
   LogOut,
   Menu,
   Moon,
   PlusCircle,
-  Search,
   Settings,
   Sun,
   UserCircle2,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import DashboardTopbarNotifications from "@/component/dashboard/DashboardTopbarNotifications";
+import DashboardTopbarSearchFresh from "@/component/dashboard/DashboardTopbarSearchFresh";
 
 interface NavbarProps {
   userName: string;
@@ -37,16 +37,10 @@ export default function Navbar({
 }: NavbarProps) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
-  const searchRef = useRef<HTMLInputElement>(null);
   const firstLetter = userName.trim().charAt(0).toUpperCase() || "G";
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-        event.preventDefault();
-        searchRef.current?.focus();
-      }
-
       if (event.key === "Escape") {
         setIsProfileOpen(false);
       }
@@ -79,8 +73,8 @@ export default function Navbar({
   return (
     <header className="dashboard-topbar-surface sticky top-0 z-30 flex w-full border-b border-gray-200 bg-white transition-colors">
       <div className="flex w-full flex-col lg:flex-row lg:items-center lg:justify-between lg:px-6">
-        <div className="dashboard-topbar-surface flex w-full items-center justify-between gap-3 border-b border-gray-200 px-4 py-3 sm:px-6 lg:w-auto lg:flex-1 lg:border-b-0 lg:border-b-transparent lg:px-0 lg:py-4">
-          <div className="flex items-center gap-3">
+        <div className="dashboard-topbar-surface flex w-full items-center gap-3 border-b border-gray-200 px-4 py-3 sm:px-6 lg:w-auto lg:flex-1 lg:border-b-0 lg:border-b-transparent lg:px-0 lg:py-4">
+          <div className="flex min-w-0 items-center gap-3">
             <button
               type="button"
               onClick={handleSidebarToggle}
@@ -90,29 +84,8 @@ export default function Navbar({
               <Menu size={18} />
             </button>
 
-            <label className="dashboard-input-shell relative hidden rounded-lg border border-gray-200 shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] lg:block">
-              <span className="dashboard-text-secondary pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
-                <Search size={18} />
-              </span>
-              <input
-                ref={searchRef}
-                type="text"
-                placeholder="Search or type command..."
-                className="dashboard-input-field h-11 w-[430px] rounded-lg border border-transparent bg-transparent py-2.5 pl-11 pr-16 text-sm text-gray-800 placeholder:text-gray-400 focus:border-[#465FFF] focus:outline-none focus:ring-4 focus:ring-[#465FFF]/10"
-              />
-              <span className="dashboard-chip-muted absolute right-2.5 top-1/2 inline-flex -translate-y-1/2 items-center gap-1 rounded-md border border-gray-200 bg-gray-50 px-2 py-1 text-[11px] font-medium text-gray-500">
-                Ctrl K
-              </span>
-            </label>
+            <DashboardTopbarSearchFresh />
           </div>
-
-          <button
-            type="button"
-            className="dashboard-outline-btn flex h-10 w-10 items-center justify-center rounded-lg text-gray-500 transition lg:hidden"
-            aria-label="Search"
-          >
-            <Search size={18} />
-          </button>
         </div>
 
         <div className="flex items-center justify-end gap-2 px-4 py-4 sm:px-6 lg:px-0 lg:py-4">
@@ -125,16 +98,7 @@ export default function Navbar({
             {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
           </button>
 
-          <button
-            type="button"
-            className="dashboard-outline-btn relative flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 text-gray-500 transition"
-            aria-label="Notifications"
-          >
-            <span className="absolute right-0 top-0.5 flex h-2 w-2 rounded-full bg-orange-400">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75"></span>
-            </span>
-            <Bell size={18} />
-          </button>
+          <DashboardTopbarNotifications />
 
           <div ref={profileRef} className="relative">
             <button

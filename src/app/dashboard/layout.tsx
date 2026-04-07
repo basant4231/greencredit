@@ -4,35 +4,99 @@ import Navbar from "@/component/dashboard/Navbar";
 import Sidebar from "@/component/dashboard/Sidebar";
 import { outfit } from "@/lib/fonts";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 const THEME_STORAGE_KEY = "greencredit-dashboard-theme";
+const PROFILE_STORAGE_KEY = "greencredit-dashboard-profile";
+
+interface CachedDashboardProfile {
+  name: string;
+  email: string;
+  image: string | null;
+}
+
+function readCachedDashboardProfileSnapshot() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  try {
+    return window.localStorage.getItem(PROFILE_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function parseCachedDashboardProfileSnapshot(snapshot: string | null) {
+  if (!snapshot) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(snapshot) as CachedDashboardProfile;
+  } catch {
+    return null;
+  }
+}
+
+function readStoredThemePreference() {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+
+  if (storedTheme) {
+    return storedTheme === "dark";
+  }
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
+function noopSubscribe() {
+  return () => {};
+}
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window === "undefined") {
-      return false;
-    }
-
-    const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
-    if (storedTheme) {
-      return storedTheme === "dark";
-    }
-
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
-  });
+  const cachedProfileSnapshot = useSyncExternalStore(
+    noopSubscribe,
+    readCachedDashboardProfileSnapshot,
+    () => null
+  );
+  const cachedProfile = parseCachedDashboardProfileSnapshot(cachedProfileSnapshot);
+  const storedDarkMode = useSyncExternalStore(noopSubscribe, readStoredThemePreference, () => false);
+  const [manualDarkMode, setManualDarkMode] = useState<boolean | null>(null);
+  const isDarkMode = manualDarkMode ?? storedDarkMode;
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDarkMode);
     document.body.classList.toggle("dark", isDarkMode);
-    window.localStorage.setItem(THEME_STORAGE_KEY, isDarkMode ? "dark" : "light");
   }, [isDarkMode]);
 
+  useEffect(() => {
+    if (!session?.user) {
+      return;
+    }
+
+    window.localStorage.setItem(
+      PROFILE_STORAGE_KEY,
+      JSON.stringify({
+        name: session.user.name || "Eco User",
+        email: session.user.email || "",
+        image: session.user.image || null,
+      } satisfies CachedDashboardProfile)
+    );
+  }, [session?.user]);
+
   const toggleTheme = () => {
-    setIsDarkMode((currentValue) => !currentValue);
+    setManualDarkMode((currentValue) => {
+      const nextValue = !(currentValue ?? storedDarkMode);
+      window.localStorage.setItem(THEME_STORAGE_KEY, nextValue ? "dark" : "light");
+      return nextValue;
+    });
   };
 
   if (status === "loading") {
@@ -40,13 +104,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className="dashboard-page flex h-screen w-full items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center gap-4">
           <div className="h-10 w-10 animate-spin rounded-full border-2 border-[#DDE9FF] border-t-[#465FFF]"></div>
-          <p className="dashboard-text-secondary text-sm font-medium text-gray-500">Loading your dashboard...</p>
+          <p className="dashboard-text-secondary text-sm font-medium text-gray-500">
+            {cachedProfile?.name ? `Welcome back, ${cachedProfile.name}` : "Loading your dashboard..."}
+          </p>
         </div>
       </div>
     );
   }
 
   const hasSession = Boolean(session);
+  const resolvedProfile = {
+    name: session?.user?.name || cachedProfile?.name || "Eco User",
+    email: session?.user?.email || cachedProfile?.email || "",
+    image: session?.user?.image || cachedProfile?.image || null,
+  };
   const mainOffset = hasSession
     ? isCollapsed
       ? "lg:pl-[90px]"
@@ -79,9 +150,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className={`min-h-screen transition-[padding] duration-300 ${mainOffset}`}>
         {hasSession && (
           <Navbar
-            userName={session?.user?.name || "Eco User"}
-            userEmail={session?.user?.email || ""}
-            userImage={session?.user?.image || null}
+            userName={resolvedProfile.name}
+            userEmail={resolvedProfile.email}
+            userImage={resolvedProfile.image}
             isDarkMode={isDarkMode}
             onOpenSidebar={() => setIsMobileOpen(true)}
             onToggleCollapse={() => setIsCollapsed((value) => !value)}

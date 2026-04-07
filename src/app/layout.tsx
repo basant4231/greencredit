@@ -8,7 +8,7 @@ import AppChrome from "@/component/AppChrome";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Green Credit Management",
+  title: "Eco Credit",
   description: "Track and manage your eco-impact",
 };
 

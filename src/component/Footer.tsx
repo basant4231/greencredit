@@ -57,7 +57,7 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-900 pt-8 text-xs font-medium text-slate-500 md:flex-row">
-          <p>&copy; 2026 EcoCredit Management System. All rights reserved.</p>
+          <p>&copy; 2026 Eco Credit. All rights reserved.</p>
           <p>
             Designed & Developed by <span className="font-bold text-emerald-500">Basant Sharma</span>
           </p>

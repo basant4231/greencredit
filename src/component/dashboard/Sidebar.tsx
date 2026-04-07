@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FilePlus2, LayoutDashboard, Leaf, LogOut, MoreHorizontal, X } from "lucide-react";
+import { FilePlus2, LayoutDashboard, Leaf, LogOut, MoreHorizontal, TreePine, X } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 interface SidebarProps {
@@ -21,6 +21,11 @@ const navItems = [
     href: "/dashboard/activities",
     icon: FilePlus2,
   },
+  {
+    name: "Buy Tree",
+    href: "/dashboard/buy-tree",
+    icon: TreePine,
+  },
 ];
 
 export default function Sidebar({ mobileOpen, isCollapsed, onClose }: SidebarProps) {
@@ -35,16 +40,16 @@ export default function Sidebar({ mobileOpen, isCollapsed, onClose }: SidebarPro
     >
       <div className="flex h-full flex-col overflow-hidden">
         <div className={`flex items-center py-8 ${showExpanded ? "justify-between" : "justify-center"}`}>
-          <Link href="/dashboard" className="flex items-center gap-3" onClick={onClose}>
+          <Link href="/" className="flex items-center gap-3" onClick={onClose}>
             <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#465FFF] text-white">
               <Leaf size={20} />
             </span>
 
             {showExpanded && (
               <span>
-                <span className="dashboard-text-primary block text-lg font-semibold tracking-tight text-gray-900">GreenCredit</span>
+                <span className="dashboard-text-primary block text-lg font-semibold tracking-tight text-gray-900">Eco Credit</span>
                 <span className="block text-[11px] font-semibold uppercase tracking-[0.26em] text-[#465FFF]">
-                  Admin dashboard
+                  Impact Dashboard
                 </span>
               </span>
             )}

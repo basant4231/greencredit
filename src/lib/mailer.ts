@@ -75,16 +75,16 @@ interface SendOtpEmailOptions {
 export async function sendOtpEmail({ name, otp, to }: SendOtpEmailOptions) {
   const { transporter, user } = getTransporter();
   const from = process.env.EMAIL_FROM || user;
-  const fromName = process.env.EMAIL_FROM_NAME || "GreenCredit";
+  const fromName = process.env.EMAIL_FROM_NAME || "Eco Credit";
 
   await transporter.sendMail({
     from: `"${fromName}" <${from}>`,
     to,
-    subject: "Verify your GreenCredit account",
-    text: `Welcome to GreenCredit, ${name}! Your verification code is ${otp}. It expires in 5 minutes.`,
+    subject: "Verify your Eco Credit account",
+    text: `Welcome to Eco Credit, ${name}! Your verification code is ${otp}. It expires in 5 minutes.`,
     html: `
       <div style="font-family: Arial, sans-serif; padding: 24px; color: #1f2937;">
-        <h2 style="margin: 0 0 12px;">Welcome to GreenCredit, ${name}!</h2>
+        <h2 style="margin: 0 0 12px;">Welcome to Eco Credit, ${name}!</h2>
         <p style="margin: 0 0 16px;">Your verification code is below. It will expire in 5 minutes.</p>
         <div style="background: #f3f4f6; border-radius: 14px; padding: 20px; text-align: center;">
           <span style="font-size: 32px; font-weight: 700; letter-spacing: 6px; color: #465fff;">

@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, useRef, useEffect } from 'react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { ArrowUpRight, CheckCircle2, Loader2, Upload, X } from 'lucide-react';
+import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { ArrowUpRight, CheckCircle2, Loader2, Upload, X } from "lucide-react";
 
 interface ActivityCardProps {
   type: "Metro" | "Planting";
@@ -22,8 +22,6 @@ export default function ActivityCard({
   description,
   image,
   accentColor,
-  borderColor,
-  buttonColor,
 }: ActivityCardProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -31,10 +29,10 @@ export default function ActivityCard({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [status, setStatus] = useState<'idle' | 'approved' | 'rejected' | 'error'>('idle');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const needsProofUpload = type === 'Metro';
+  const [status, setStatus] = useState<"idle" | "approved" | "rejected" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const needsProofUpload = type === "Metro";
 
   useEffect(() => {
     if (!selectedFile) {
@@ -56,7 +54,7 @@ export default function ActivityCard({
 
     if (!navigator.geolocation) {
       setStatus('error');
-      setErrorMessage('Geolocation is not supported in this browser.');
+      setErrorMessage("Geolocation is not supported in this browser.");
       setIsLoading(false);
       return;
     }
@@ -68,25 +66,25 @@ export default function ActivityCard({
           if (selectedFile) {
             formData.append('image', selectedFile);
           }
-          formData.append('lat', pos.coords.latitude.toString());
-          formData.append('lng', pos.coords.longitude.toString());
-          formData.append('type', type);
+          formData.append("lat", pos.coords.latitude.toString());
+          formData.append("lng", pos.coords.longitude.toString());
+          formData.append("type", type);
 
-          const res = await fetch('/api/activities/verify', {
-            method: 'POST',
+          const res = await fetch("/api/activities/verify", {
+            method: "POST",
             body: formData,
           });
 
           const data = (await res.json().catch(() => null)) as
-            | { error?: string; message?: string; status?: 'approved' | 'rejected' }
+            | { error?: string; message?: string; status?: "approved" | "rejected" }
             | null;
 
           if (!res.ok) {
-            throw new Error(data?.error || 'Verification failed.');
+            throw new Error(data?.error || "Verification failed.");
           }
 
           setIsLoading(false);
-          setStatus(data?.status === 'rejected' ? 'rejected' : 'approved');
+          setStatus(data?.status === "rejected" ? "rejected" : "approved");
           setSuccessMessage(
             data?.message ||
               (type === 'Metro'
@@ -94,18 +92,18 @@ export default function ActivityCard({
                 : 'Activity verified and credits issued.')
           );
 
-          if (data?.status !== 'rejected') {
-            setTimeout(() => router.push('/dashboard'), 1800);
+          if (data?.status !== "rejected") {
+            setTimeout(() => router.push("/dashboard"), 1800);
           }
         } catch (err) {
-          setStatus('error');
-          setErrorMessage(err instanceof Error ? err.message : 'Verification failed.');
+          setStatus("error");
+          setErrorMessage(err instanceof Error ? err.message : "Verification failed.");
           setIsLoading(false);
         }
       },
       () => {
-        setStatus('error');
-        setErrorMessage('Location access is required for Eco-Verification.');
+        setStatus("error");
+        setErrorMessage("Location access is required for Eco-Verification.");
         setIsLoading(false);
       },
       { enableHighAccuracy: true, timeout: 10000 }
@@ -113,7 +111,7 @@ export default function ActivityCard({
   };
 
   return (
-    <div className={`dashboard-surface grid gap-6 overflow-hidden rounded-[32px] border ${borderColor} bg-white p-6 shadow-[0_28px_55px_-36px_rgba(15,23,42,0.4)] lg:grid-cols-[minmax(0,1.15fr)_320px]`}>
+    <div className="dashboard-surface grid gap-6 overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-[0_24px_48px_-34px_rgba(15,23,42,0.35)] lg:grid-cols-[minmax(0,1.15fr)_320px]">
       <div className="flex flex-col justify-between gap-8">
         <div className="space-y-6">
           <div className="flex flex-wrap items-center gap-3">
@@ -122,7 +120,7 @@ export default function ActivityCard({
               {type}
             </span>
             <span className="dashboard-surface-soft dashboard-text-secondary inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
-              Verified flow
+              Activity flow
             </span>
           </div>
 
@@ -131,7 +129,7 @@ export default function ActivityCard({
             <p className="dashboard-text-secondary mt-3 max-w-2xl text-sm leading-7 text-slate-600">{description}</p>
           </div>
 
-          <div className="dashboard-surface-alt rounded-[28px] border border-slate-200 bg-slate-50/80 p-5">
+          <div className="dashboard-surface-alt rounded-xl border border-gray-200 bg-gray-50 p-5">
             {needsProofUpload ? (
               <div className="space-y-4">
                 <div className="flex items-start justify-between gap-4">
@@ -145,7 +143,7 @@ export default function ActivityCard({
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="dashboard-outline-btn inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-emerald-200 hover:text-emerald-600"
+                      className="dashboard-outline-btn inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-[#D5DBFF] hover:text-[#465FFF]"
                     >
                       <Upload size={16} />
                       Upload
@@ -154,9 +152,9 @@ export default function ActivityCard({
                 </div>
 
                 {selectedFile ? (
-                  <div className="dashboard-surface flex flex-col gap-4 rounded-[24px] border border-emerald-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="dashboard-surface flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="dashboard-surface-soft relative h-20 w-20 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
+                      <div className="dashboard-surface-soft relative h-20 w-20 overflow-hidden rounded-xl border border-gray-200 bg-gray-100">
                         {previewUrl ? (
                           <Image src={previewUrl} alt="Metro ticket preview" fill className="object-cover" />
                         ) : (
@@ -173,7 +171,7 @@ export default function ActivityCard({
                     <button
                       type="button"
                       onClick={() => setSelectedFile(null)}
-                      className="inline-flex items-center gap-2 rounded-full border border-rose-100 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-500 transition hover:bg-rose-100"
+                      className="inline-flex items-center gap-2 rounded-lg border border-rose-100 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-500 transition hover:bg-rose-100"
                     >
                       <X size={16} />
                       Remove
@@ -183,7 +181,7 @@ export default function ActivityCard({
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="dashboard-outline-btn flex w-full items-center justify-between rounded-[24px] border border-dashed border-slate-300 bg-white px-5 py-4 text-left transition hover:border-emerald-300"
+                    className="dashboard-outline-btn flex w-full items-center justify-between rounded-xl border border-dashed border-gray-300 bg-white px-5 py-4 text-left transition hover:border-[#B7C5FF]"
                   >
                     <div>
                       <p className="dashboard-text-primary text-sm font-semibold text-slate-900">Choose metro ticket image</p>
@@ -220,7 +218,7 @@ export default function ActivityCard({
             type="button"
             onClick={handleVerify}
             disabled={isLoading || (needsProofUpload && !selectedFile)}
-            className={`inline-flex w-fit items-center gap-3 rounded-[22px] px-6 py-4 text-sm font-semibold text-white shadow-[0_22px_45px_-26px_rgba(15,23,42,0.55)] transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-55 ${buttonColor}`}
+            className="inline-flex w-fit items-center gap-3 rounded-lg bg-[#465FFF] px-6 py-4 text-sm font-semibold text-white shadow-[0_22px_45px_-26px_rgba(15,23,42,0.55)] transition hover:bg-[#3649d9] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-55"
           >
             {isLoading ? (
               <>
@@ -238,32 +236,21 @@ export default function ActivityCard({
               'Verify and contribute'
             )}
           </button>
-          {(status === 'approved' || status === 'rejected') && successMessage && (
-            <p className={`ml-1 text-sm font-medium ${status === 'approved' ? 'text-emerald-600' : 'text-rose-500'}`}>
+          {(status === "approved" || status === "rejected") && successMessage && (
+            <p className={`ml-1 text-sm font-medium ${status === "approved" ? "text-emerald-600" : "text-rose-500"}`}>
               {successMessage}
             </p>
           )}
-          {status === 'error' && (
+          {status === "error" && (
             <p className="ml-1 text-sm font-medium text-red-500">
-              {errorMessage || 'Verification failed. Please try again.'}
+              {errorMessage || "Verification failed. Please try again."}
             </p>
           )}
         </div>
       </div>
 
-      <div className="relative min-h-[280px] overflow-hidden rounded-[30px] shadow-[0_24px_55px_-34px_rgba(15,23,42,0.6)]">
+      <div className="relative min-h-[280px] overflow-hidden rounded-2xl shadow-[0_24px_55px_-34px_rgba(15,23,42,0.6)]">
         <Image src={image} alt={title} fill className="object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/15 to-transparent" />
-        <div className="absolute left-5 top-5 rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-white backdrop-blur-sm">
-          Preview
-        </div>
-        <div className="absolute inset-x-5 bottom-5 rounded-[24px] bg-white/12 p-4 text-white backdrop-blur-md">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-100">{type}</p>
-          <p className="mt-2 text-xl font-semibold">{title}</p>
-          <p className="mt-2 text-sm leading-6 text-white/80">
-            Submit this action when you are ready to add a fresh verified credit to your account.
-          </p>
-        </div>
       </div>
     </div>
   );

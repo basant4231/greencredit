@@ -4,6 +4,7 @@ import { ArrowUpRight, Sparkles, Target } from "lucide-react";
 import StatCards from "@/component/dashboard/StatsCards";
 import ActivityGrid from "@/component/dashboard/ActivityGrid";
 import RecentHistory from "@/component/dashboard/RecentHistory";
+import DashboardOverview from "@/component/dashboard/DashboardOverview";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import dbConnect from "@/lib/dbConnect";
@@ -86,7 +87,7 @@ function formatDateLabel(value?: string) {
   }).format(new Date(value));
 }
 
-export default async function DashboardPage() {
+export async function LegacyDashboardPage() {
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user?.email) {
@@ -246,7 +247,7 @@ export default async function DashboardPage() {
                   Choose your next green action.
                 </h2>
                 <p className="dashboard-text-secondary mt-4 max-w-2xl text-sm leading-7 text-gray-500">
-                  This page now follows the same admin-template direction as your main dashboard, while keeping the GreenCredit verification flow simple and focused.
+                  Review your latest progress, submit verified eco actions, and keep your Eco Credit rewards growing in one place.
                 </p>
               </div>
 
@@ -384,4 +385,18 @@ export default async function DashboardPage() {
       </section>
     </div>
   );
+}
+
+export default async function DashboardPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user?.email) {
+    return (
+      <div className="flex min-h-[400px] items-center justify-center">
+        <p className="dashboard-text-secondary text-gray-500">Please log in to view your dashboard</p>
+      </div>
+    );
+  }
+
+  return <DashboardOverview />;
 }

@@ -43,7 +43,7 @@ export default function AboutUs() {
           <motion.div className={styles.content} variants={itemVariants}>
             <header className={styles.header}>
               <h1 className={`${robotoSlab.className} ${styles.title}`}>
-                Welcome to EcoCredit
+                Welcome to Eco Credit
                 <br />
                 by Basant Sharma
               </h1>
@@ -53,7 +53,7 @@ export default function AboutUs() {
             </header>
 
             <p className={`${openSans.className} ${styles.description}`}>
-              EcoCredit is a simple platform for people who want their sustainable actions
+              Eco Credit is a simple platform for people who want their sustainable actions
               to count. It helps users record green activities, understand their impact,
               and earn credits that encourage wider participation in a cleaner and more
               responsible future.
@@ -74,7 +74,7 @@ export default function AboutUs() {
           <motion.span className={styles.image} variants={itemVariants}>
             <Image
               src={bannerImage}
-              alt="EcoCredit banner image"
+              alt="Eco Credit banner image"
               sizes="(max-width: 980px) 100vw, 50vw"
               className={styles.imageAsset}
             />

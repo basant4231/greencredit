@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import Activity from "@/models/Activity";
+import Notification from "@/models/Notification";
 
 const activityMap = {
   Metro: { title: "Commuted by Metro", credits: 10, co2: 2, energy: 5, category: "Transportation" },
@@ -32,6 +33,14 @@ export async function POST(req: Request) {
       co2Offset: activityData.co2,
       energySaved: activityData.energy,
       status: "approved", // Verification skipped as requested
+    });
+
+    await Notification.create({
+      userId,
+      kind: "activity",
+      title: activityData.title,
+      message: `Activity completed successfully. +${activityData.credits} credits added.`,
+      href: "/dashboard/activities",
     });
 
     return NextResponse.json({ success: true, activity: newActivity });

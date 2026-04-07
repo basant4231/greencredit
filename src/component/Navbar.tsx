@@ -53,7 +53,7 @@ const Navbar = () => {
       <div className={styles.homeInner}>
         <Link href="/" className={`${oswald.className} ${styles.homeBrand}`}>
           <span className={styles.brandText}>
-            Eco<span className={styles.brandTextAccent}>Credit</span>
+            Eco <span className={styles.brandTextAccent}>Credit</span>
           </span>
         </Link>
 

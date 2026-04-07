@@ -17,7 +17,7 @@ const StatsRibbon = () => {
     {
       value: "582",
       label: "Verified Submissions",
-      subtitle: "Activities and projects reviewed on EcoCredit *",
+      subtitle: "Activities and projects reviewed on Eco Credit *",
       accent: "bg-[#f56a6a]",
       surface: "from-[#fff6f6]",
     },
@@ -30,7 +30,7 @@ const StatsRibbon = () => {
     },
     {
       value: "25.2k",
-      label: "EcoCredits Earned",
+      label: "Eco Credits Earned",
       subtitle: "Reward units issued to user wallets *",
       accent: "bg-emerald-600",
       surface: "from-[#f6fbf4]",
@@ -68,7 +68,7 @@ const StatsRibbon = () => {
           variants={itemVariants}
           className="mb-14 text-center text-4xl font-black tracking-tight text-[#3d4449]"
         >
-          EcoCredit at a glance
+          Eco Credit at a glance
         </motion.h2>
 
         <motion.div

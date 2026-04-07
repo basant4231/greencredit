@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { oswald, sourceSans } from "@/lib/fonts";
 import { useParallaxBackground } from "@/hooks/useParallaxBackground";
 import styles from "@/styles/marketing/Hero.module.css";
-import backgroundHero from "@/images/background_hero.webp";
+import backgroundHero from "@/images/image.png";
 
 interface HeroProps {
   isLoggedIn?: boolean;
@@ -35,7 +35,7 @@ export default function Hero({ isLoggedIn = false }: HeroProps) {
       />
 
       <div className={styles.content}>
-        <h1 className={`${oswald.className} ${styles.title}`}>Welcome to EcoCredit</h1>
+        <h1 className={`${oswald.className} ${styles.title}`}>Welcome to Eco Credit</h1>
         <p className={`${sourceSans.className} ${styles.subtitle}`}>
           Earn green credits for the revolution
         </p>

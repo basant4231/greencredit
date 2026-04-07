@@ -5,6 +5,7 @@ import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import GoogleProvider from "next-auth/providers/google";
 import Activity from "@/models/Activity";
+import Notification from "@/models/Notification";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -56,10 +57,6 @@ export const authOptions: NextAuthOptions = {
     },
 
     async signIn({ user, account }) {
-      if (account?.provider !== "google") {
-        return true;
-      }
-
       if (!user.email) {
         return false;
       }
@@ -69,15 +66,16 @@ export const authOptions: NextAuthOptions = {
       try {
         await dbConnect();
 
-        const existingUser = await User.findOne({ email: user.email });
+        let existingUser = await User.findOne({ email: user.email });
 
-        if (!existingUser) {
+        if (account?.provider === "google" && !existingUser) {
           const newUser = await User.create({
             name: safeName,
             email: user.email,
             image: user.image ?? undefined,
             role: "user",
           });
+          existingUser = newUser;
 
           void Activity.create({
             userId: newUser._id,
@@ -88,7 +86,7 @@ export const authOptions: NextAuthOptions = {
           }).catch((error: unknown) => {
             console.error("Background Activity Error:", error);
           });
-        } else {
+        } else if (existingUser) {
           const updates: { name: string; image?: string } = { name: safeName };
           if (user.image) {
             updates.image = user.image;
@@ -100,7 +98,19 @@ export const authOptions: NextAuthOptions = {
           ).catch((error: unknown) => {
             console.error("Background Update Error:", error);
           });
+        } else {
+          return false;
         }
+
+        void Notification.create({
+          userId: existingUser._id,
+          kind: "login",
+          title: "Signed in",
+          message: `Welcome back, ${safeName}. Your dashboard is ready.`,
+          href: "/dashboard",
+        }).catch((error: unknown) => {
+          console.error("Background Notification Error:", error);
+        });
 
         return true;
       } catch (error) {

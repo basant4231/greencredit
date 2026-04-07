@@ -81,7 +81,7 @@ export default function SignUp() {
               {step === 1 ? "Create Account" : "Verify Email"}
             </h1>
             <p className="mt-2 text-white/60">
-              {step === 1 ? "Join the EcoCredit movement" : `Enter the code sent to ${formData.email}`}
+              {step === 1 ? "Join the Eco Credit movement" : `Enter the code sent to ${formData.email}`}
             </p>
           </div>
 

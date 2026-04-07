@@ -9,6 +9,7 @@ import {
   type MetroTicketVerdict,
 } from "@/lib/metroTicketAI";
 import Activity from "@/models/Activity";
+import Notification from "@/models/Notification";
 import User from "@/models/User";
 
 export const runtime = "nodejs";
@@ -183,6 +184,17 @@ export async function POST(request: Request) {
         distanceToStation: Number(distanceToStation.toFixed(2)),
         aiAuditReason: auditReason,
       },
+    });
+
+    await Notification.create({
+      userId: userInDb._id,
+      kind: "activity",
+      title: activityData.title,
+      message:
+        finalStatus === "approved"
+          ? `Activity verified successfully. +${awardedCredits} credits issued.`
+          : auditReason || "Activity was reviewed but could not be approved.",
+      href: "/dashboard/activities",
     });
 
     return NextResponse.json({
