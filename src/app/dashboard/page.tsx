@@ -51,6 +51,10 @@ export default async function DashboardPage() {
 
   const userId = userInDb._id;
 
+  const dateLimit = new Date();
+  dateLimit.setHours(0, 0, 0, 0);
+  dateLimit.setDate(dateLimit.getDate() - 111);
+
   const [statsResult, recentActivitiesRaw, activityDatesRaw] = await Promise.all([
     Activity.aggregate<AggregatedStats>([
       { $match: { userId: userId, status: "approved" } },
@@ -68,7 +72,7 @@ export default async function DashboardPage() {
       .limit(5)
       .select("_id title category creditsEarned status createdAt")
       .lean<RecentActivityRaw[]>(),
-    Activity.find({ userId: userId })
+    Activity.find({ userId: userId, createdAt: { $gte: dateLimit } })
       .select("createdAt")
       .lean<ActivityDateRaw[]>(),
   ]);
