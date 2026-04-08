@@ -1,0 +1,3 @@
+## 2024-03-29 - Missing compound indexes for dashboard aggregation
+**Learning:** The `Activity` collection lacked indexes for `{ userId: 1, status: 1 }` and `{ userId: 1, createdAt: -1 }`. Because the `DashboardPage` runs `Activity.aggregate` and `Activity.find().sort()` queries based on `userId`, `status`, and `createdAt` for every user dashboard view, MongoDB had to perform a full collection scan (COLLSCAN) for each user. This is an N+1 query problem that scales very poorly.
+**Action:** When creating new schemas or querying MongoDB models with `.aggregate()` or `.find().sort()`, always ensure that the query matches an existing compound index.

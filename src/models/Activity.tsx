@@ -72,5 +72,9 @@ const ActivitySchema = new Schema<IActivity>({
   proofImage: { type: String, required: false },
 });
 
+// Performance Optimization: Indexes for dashboard queries
+ActivitySchema.index({ userId: 1, status: 1 }); // Optimizes Activity.aggregate for stats
+ActivitySchema.index({ userId: 1, createdAt: -1 }); // Optimizes Activity.find().sort() for recent history
+
 const Activity = models.Activity || model("Activity", ActivitySchema);
 export default Activity;
