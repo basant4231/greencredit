@@ -133,7 +133,16 @@ export async function LegacyDashboardPage() {
       .limit(5)
       .select("_id title category creditsEarned status createdAt")
       .lean<RecentActivityRaw[]>(),
-    Activity.find({ userId: userId })
+    // ⚡ Bolt: Payload Reduction Optimization
+    // The UI only renders 112 days of activity. Bounding this query avoids
+    // fetching an unbounded history for long-term users.
+    // Expected impact: Prevents massive memory and DB payload bottleneck for users with long history.
+    Activity.find({
+      userId: userId,
+      createdAt: {
+        $gte: new Date(new Date().getTime() - 115 * 24 * 60 * 60 * 1000)
+      }
+    })
       .select("createdAt")
       .lean<ActivityDateRaw[]>(),
     Activity.aggregate<StatusSummaryRaw>([
