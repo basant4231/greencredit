@@ -1,0 +1,3 @@
+## 2024-04-02 - [Overfetching Unbounded Date Ranges]
+**Learning:** In MongoDB aggregation/find queries for UI components like activity heatmaps, querying ALL historical data when the UI only displays a fixed window (e.g., last 4 months) creates a massive unscalable bottleneck. The time and memory complexity scales with the user's age on the platform rather than the UI complexity.
+**Action:** Always constrain date-based queries to the visible UI window using `$gte` / `$lte` in `find` queries, and add corresponding compound indexes (e.g., `{ userId: 1, createdAt: -1 }`) to support the constrained queries efficiently.
